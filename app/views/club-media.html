@@ -1,0 +1,26 @@
+<div class="media-left media-top">
+  <!--div ng-if="club.editable">
+    <a ui-sref="app.editclub">
+      <img class="media-object img-thumbnail"
+        ng-src={{club.image}} alt="Club {{club.name}}">
+    </a>
+  </div>
+  <div ng-if="!sponsor.editable"-->
+    <a ui-sref="app.clubdetails({id: club.id})">
+      <img class="media-object img-thumbnail"
+        ng-src={{club.image}} alt="Club {{club.name}}">
+    </a>
+  <!--/div-->
+</div>
+<div class="media-body">
+  <div class="media-body">
+    <h2 class="media-heading">{{club.name}}
+    <span class="label label-warning">{{club.label}}</span></h2>
+    <p>{{club.description}}</p>
+    <div ng-if="club.editable">
+      <button type="button" class="btn btn-success pull-right" ui-sref="app.editclub">
+        Edit Club
+      </button>
+    </div>
+  </div>
+</div>

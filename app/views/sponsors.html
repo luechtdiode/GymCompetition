@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row row-content" ng-controller="SponsorsController">
+    <div class="col-xs-12" ng-if="!showSponsor">
+      <h3>{{message}}</h3>
+    </div>
+    <div class="col-xs-12" ng-if="showSponsor">
+      <button type="button" class="btn btn-success pull-right" ui-sref="app.registersponsor">
+        Register as new Sponsor
+      </button>
+    </div>
+    <div class="col-xs-12" ng-if="showSponsor">
+
+      <ul class="media-list">
+        <li class="media" ng-repeat="sponsor in sponsors | orderBy: 'name'">
+          <div ng-include="'views/sponsor-media.html'"></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

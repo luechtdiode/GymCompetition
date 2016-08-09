@@ -1,0 +1,43 @@
+{
+  "name": "GymCompetition",
+  "version": "1.0.0",
+  "description": "Website clubs and sponsors",
+  "main": "index.html",
+  "moduleType": [],
+  "keywords": [
+    "GymCompetition",
+    "Gymnasitc",
+    "Sports",
+    "Competition",
+    "Sponsoring"
+  ],
+  "authors": [
+    "Roland Seidel"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.5.8",
+    "font-awesome": "fontawesome#~4.6.3"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "css/font-awesome.css"
+      ]
+    }
+  }
+}

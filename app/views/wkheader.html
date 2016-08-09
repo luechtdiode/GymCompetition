@@ -1,0 +1,55 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="WKIndexController">
+  <div class="container-fluid">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle"  ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ui-sref="app"><img src="images/logo.png" height=30 width=30></a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
+          <ul class="nav navbar-nav">
+             <li><a ui-sref="wkapp">
+                 <span class="glyphicon glyphicon-home"
+                  aria-hidden="true"></span> Home</a></li>
+             <li><a ui-sref="wkapp.aboutus">
+                 <span class="glyphicon glyphicon-info-sign"
+                  aria-hidden="true"></span> About</a></li>
+             <li><a ui-sref="wkapp.program">
+                 <span class="glyphicon glyphicon-list"
+                  aria-hidden="true"></span> Program</a></li>
+             <li><a ui-sref="wkapp.results">
+                 <span class="glyphicon glyphicon-stats"
+                  aria-hidden="true"></span> Results</a></li>
+              <li><a ui-sref="wkapp.contactus">
+              <i class="fa fa-envelope-o"></i> Contact</a></li>
+          </ul>
+        </div>
+    </div>
+  </div>
+</nav>
+<header class="jumbotron">
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="container" ng-controller="WKIndexController">
+        <div class="row row-header">
+            <div class="col-xs-12 col-sm-6">
+              <h1><!--img src="images/wettkampf.png" class="glyphicon"-->
+              {{competition.name}}</h1>
+            </div>
+            <div class="col-xs-12 col-sm-5 col-sm-offset-1">
+              <h3>{{competition.location}}</h3>
+              <p>
+              <div ng-repeat="date in competition.dates">
+              <span><i class="glyphicon glyphicon-calendar">
+                </i> {{date | date: 'MM-dd-yyyy'}}
+              </span>
+              </div>
+              Carrier: <em>{{club.name}}</em>
+              </p>
+            </div>
+        </div>
+    </div>
+</header>

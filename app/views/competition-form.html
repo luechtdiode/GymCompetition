@@ -1,0 +1,81 @@
+<div class="col-xs-12 col-sm-6">
+  <div class="form-group" ng-class="{ 'has-error' : EditForm.name.$error.required && !EditForm.name.$pristine }">
+      <label for="name">Competition Name</label>
+      <input type="text" class="form-control input-sm" id="name" name="name" placeholder="Competition Name" ng-model="competition.name" required/>
+      <span ng-show="EditForm.name.$error.required && !EditForm.$pristine"
+      class="help-block">A Competition Name is required.</span>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error' : EditForm.date.$error.required && !EditForm.date.$pristine }">
+    <label for="date">Date</label>
+    <input type="date" class="form-control input-sm" id="date" name="date" placeholder="Date" ng-model="competition.date" required/>
+    <span ng-show="EditForm.date.$error.required && !EditForm.$pristine"
+    class="help-block">A date is required.</span>
+  </div>
+  <div class="form-group">
+    <label for="date2">2nd Date (optional)</label>
+    <input type="date" class="form-control input-sm" id="date2" name="date2" placeholder="optional 2nd Date" ng-model="competition.date2"/>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6">
+  <div class="form-group" ng-class="{ 'has-error' : EditForm.location.$error.required && !EditForm.location.$pristine }">
+      <label for="location">Location</label>
+      <input type="text" class="form-control input-sm" id="location" name="location" placeholder="Location" ng-model="competition.location" required/>
+      <span ng-show="EditForm.location.$error.required && !EditForm.$pristine"
+      class="help-block">The location of the competition is required.</span>
+  </div>
+  <div class="form-group">
+      <label for="kind">Kind</label>
+      <input type="text" class="form-control input-sm" id="kind" name="kind" placeholder="Kind" ng-model="competition.kind">
+  </div>
+</div>
+<div class="col-xs-12 col-sm-7">
+  <div class="form-group" ng-class="{ 'has-error' : EditForm.description.$error.required && !EditForm.description.$pristine }">
+      <label for="description">Description</label>
+      <textarea rows="12" class="form-control input-sm" id="description" name="description" placeholder="Description" ng-model="competition.description" required></textarea>
+      <span ng-show="EditForm.description.$error.required && !EditForm.$pristine"
+      class="help-block">Description is required.</span>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-5">
+  <div class="col-xs-12"><h4>Sponsoring-Actions&nbsp;&nbsp;<span class="label label-danger">Budget&nbsp;{{competition.budget | currency}}&nbsp;</span></h4></div>
+  <div ng-repeat="action in competition.sponsoractions">
+    <div class="col-xs-12">
+      <label class="checkbox-inline">
+          <input type="checkbox"
+          ng-model="action.selected"
+          id="selected_{{action.id}}"
+          name="selected_{{action.id}}"
+          ng-change="recalculateBudget()">
+          <strong>{{action.name}}</strong>
+      </label>
+    </div>
+    <div class="col-xs-12 col-sm-5 col-sm-offset-2" ng-if="action.selected">
+      <div class="form-group" ng-class="{ 'has-error' : EditForm.selected_{{action.id}}.selected && EditForm.cost_{{action.id}}.$error.required && !EditForm.cost_{{action.id}}.$pristine }">
+          <label for="bid_{{action.id}}">Price</label>
+          <input type="text" class="form-control input-sm" id="cost_{{action.id}}" name="cost_{{action.id}}"
+          placeholder="Cost per {{action.name}} applies"
+          title="Cost per {{action.name}} applies"
+          ng-model="action.costperaction"
+          ng-change="recalculateBudget()"
+          ng-disabled="!action.selected"
+          required/>
+         <span ng-if="action.selected" ng-show="EditFormaction.cost_{{action.id}}.$error.required && !EditFormaction.$pristine"
+         class="help-block">A cost-value for that action is required, if you checked the action active.</span>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-5" ng-if="action.selected">
+      <div class="form-group" ng-class="{ 'has-error' : EditForm.selected_{{action.id}}.selected && EditForm.max_{{action.id}}.$error.required && !EditForm.$pristine }">
+          <label for="max_{{action.id}}">Max</label>
+          <input type="text" class="form-control input-sm" id="max_{{action.id}}" name="max_{{action.id}}"
+          placeholder="Maximum of {{action.name}} applyments"
+          title="Maximum of {{action.name}} applyments"
+          ng-model="action.maxcnt"
+          ng-change="recalculateBudget()"
+          ng-disabled="!action.selected"
+          required/>
+         <span ng-if="action.selected" ng-show="EditForm.max_{{action.id}}.$error.required && !EditForm.$pristine"
+         class="help-block">A max count for that action is required, if you checked the action active.</span>
+      </div>
+    </div>
+  </div>
+</div>

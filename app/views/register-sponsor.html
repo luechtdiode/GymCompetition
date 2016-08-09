@@ -1,0 +1,48 @@
+<div class="container" ng-controller="RegisterController">
+  <div class="row row-content">
+    <div class="col-xs-12">
+      <div class="">
+        <h3>Register as Sponsor</h3>
+      </div>
+      <form name="EditForm" ng-submit="doRegister()" novalidate>
+        <div class="col-xs-12"><label><h4>User Details</h4></label></div>
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group" ng-class="{ 'has-error' : EditForm.username.$error.required && !EditForm.username.$pristine }">
+              <label for="username">Username</label>
+              <input type="text" class="form-control input-sm" id="username" name="username" placeholder="Username" ng-model="registration.username" required/>
+              <span ng-show="EditForm.username.$error.required && !EditForm.$pristine"
+              class="help-block">Your username is required.</span>
+          </div>
+          <div class="form-group" ng-class="{ 'has-error' : EditForm.password.$error.required && !EditForm.password.$pristine }">
+              <label for="password">Password</label>
+              <input type="password" class="form-control input-sm" id="password" name="password" placeholder="Password" ng-model="registration.password" required/>
+              <span ng-show="EditForm.password.$error.required && !EditForm.$pristine"
+              class="help-block">Your password is required.</span>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+              <label for="firstname">First Name</label>
+              <input type="text" class="form-control input-sm" id="firstname" name="firstname" placeholder="First Name" ng-model="registration.firstname">
+          </div>
+          <div class="form-group">
+              <label for="lastname">Last Name</label>
+              <input type="text" class="form-control input-sm" id="lastname" name="lastname" placeholder="Last Name" ng-model="registration.lastname">
+          </div>
+        </div>
+        <div ng-include="'views/sponsor-form.html'"></div>
+        <div class="col-xs-12 col-sm-6">
+          <div class="checkbox">
+              <label>
+                  <input type="checkbox" ng-model="registration.rememberMe"> Remember me
+              </label>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <button type="button" class="btn btn-default btn-sm pull-right" ui-sref="app.sponsors">Cancel</button>
+          <button type="submit" class="btn btn-info btn-sm pull-right" ng-disabled="EditForm.$invalid">Register</button> <!--ng-disabled="EditForm.$invalid"-->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

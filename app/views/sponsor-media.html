@@ -1,0 +1,30 @@
+<div class="media-left media-top">
+  <!--div ng-if="sponsor.editable">
+    <a ui-sref="app.editsponsor">
+      <img class="media-object img-thumbnail"
+        ng-src={{sponsor.image}} alt="Sponsor {{sponsor.name}}">
+    </a>
+  </div>
+  <div ng-if="!sponsor.editable"-->
+    <a ui-sref="app.sponsordetails({id: sponsor.id})">
+      <img class="media-object img-thumbnail"
+        ng-src={{sponsor.image}} alt="Sponsor {{sponsor.name}}">
+    </a>
+  <!--/div-->
+</div>
+<div class="media-body">
+  <div class="media-body">
+    <h2 class="media-heading">{{sponsor.name}}
+    <span class="label label-warning">{{sponsor.label}}</span></h2>
+    <div class="well">
+      <p>{{sponsor.slogan}}</p>
+      <footer ng-if="sponsor.homepage !== undefined">See more on, <i class="fa fa-link"></i>
+      <a href='{{sponsor.homepage}}' target='_blank'><cite title="Homepage">{{sponsor.homepage}}</cite></a></footer>
+    </div>
+    <div ng-if="sponsor.editable">
+      <button type="button" class="btn btn-success pull-right" ui-sref="app.editsponsor({id: sponsor.id})">
+        Edit Sponsor
+      </button>
+    </div>
+  </div>
+</div>

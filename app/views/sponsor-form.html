@@ -1,0 +1,104 @@
+<div class="col-xs-12"><h4>Sponsoring Details</h4></div>
+<div class="col-xs-12 col-sm-7">
+  <div class="form-group" ng-class="{ 'has-error' : EditForm.company.$error.required && !EditForm.company.$pristine }">
+      <label for="company">Company</label>
+      <input type="text" class="form-control input-sm" id="company" name="company" placeholder="Name of the Sponsor" ng-model="registration.company" required/>
+      <span ng-show="EditForm.company.$error.required && !EditForm.$pristine"
+      class="help-block">Your company as Sponsor is required.</span>
+  </div>
+  <div class="form-group">
+      <label for="homepage">Homepage</label>
+      <input type="text" class="form-control input-sm" id="homepage" name="homepage" placeholder="Homepage" ng-model="registration.homepage"/>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error' : EditForm.slogan.$error.required && !EditForm.slogan.$pristine }">
+      <label for="slogan">Slogan</label>
+      <textarea rows="12" class="form-control input-sm" id="slogan" name="slogan" placeholder="Company's Spot Slogan" ng-model="registration.slogan" required></textarea>
+      <span ng-show="EditForm.slogan.$error.required && !EditForm.$pristine"
+      class="help-block">Your company's slogan is required.</span>
+  </div>
+  <div class="col-xs-12 col-sm-2">
+    <div class="form-group">
+      <label class="btn btn-social-icon btn-google-plus"  for="googleplushandle"><i class="fa fa-google-plus"></i></label>
+      <input type="text" class="form-control input-sm" id="googleplushandle" name="googleplushandle" placeholder="Google+ ID" ng-model="registration.googleplushandle"/>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-2">
+    <div class="form-group">
+        <label class="btn btn-social-icon btn-facebook" for="facebookhandle"><i class="fa fa-facebook"></i></label>
+        <input type="text" class="form-control input-sm" id="facebookhandle" name="facebookhandle" placeholder="Facebook-ID" ng-model="registration.facebookhandle"/>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-2">
+    <div class="form-group">
+        <label class="btn btn-social-icon btn-linkedin" for="linkedinhandle"><i class="fa fa-linkedin"></i></label>
+        <input type="text" class="form-control input-sm" id="linkedinhandle" name="linkedinhandle" placeholder="LinkedIn-ID" ng-model="registration.linkedinhandle"/>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-3">
+    <div class="form-group">
+        <label class="btn btn-social-icon btn-twitter" for="twitterhandle"><i class="fa fa-twitter"></i></label>
+        <input type="text" class="form-control input-sm" id="twitterhandle" name="twitterhandle" placeholder="Twitter-Handle" ng-model="registration.twitterhandle"/>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-3">
+    <div class="form-group">
+        <label class="btn btn-social-icon btn-youtube" for="youtubehandle"><i class="fa fa-youtube"></i></label>
+        <input type="text" class="form-control input-sm" id="youtubehandle" name="youtubehandle" placeholder="Youtube-Channel" ng-model="registration.youtubehandle"/>
+    </div>
+  </div>
+
+</div>
+
+<div class="col-xs-12 col-sm-5">
+  <div class="col-xs-12"><h4>Sponsoring-Actions&nbsp;&nbsp;<span class="label label-danger">Budget&nbsp;{{registration.budget | currency}}&nbsp;</span></h4></div>
+  <div ng-repeat="action in registration.regactions">
+    <div class="col-xs-12">
+      <label class="checkbox-inline">
+          <input type="checkbox"
+          ng-model="action.selected"
+          id="selected_{{action.id}}"
+          name="selected_{{action.id}}"
+          ng-change="recalculateBudget()">
+          <strong>{{action.name}}</strong>
+      </label>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-sm-offset-2" ng-if="action.selected">
+      <div class="form-group" ng-class="{ 'has-error' : EditForm.selected_{{action.id}}.selected && EditForm.bid_{{action.id}}.$error.required && !EditForm.bid_{{action.id}}.$pristine }">
+          <label for="bid_{{action.id}}">Bid</label>
+          <input type="text" class="form-control input-sm" id="bid_{{action.id}}" name="bid_{{action.id}}"
+          placeholder="Bid per {{action.name}} applies"
+          title="Bid per {{action.name}} applies"
+          ng-model="action.bidperaction"
+          ng-change="recalculateBudget()"
+          ng-disabled="!action.selected"
+          required/>
+         <span ng-if="action.selected" ng-show="EditFormaction.bid_{{action.id}}.$error.required && !EditFormaction.$pristine"
+         class="help-block">A bid for that action is required, if you checked the action active.</span>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-3" ng-if="action.selected">
+      <div class="form-group" ng-class="{ 'has-error' : EditForm.selected_{{action.id}}.selected && EditForm.max_{{action.id}}.$error.required && !EditForm.$pristine }">
+          <label for="max_{{action.id}}">Max</label>
+          <input type="text" class="form-control input-sm" id="max_{{action.id}}" name="max_{{action.id}}"
+          placeholder="Maximum of {{action.name}} applyments"
+          title="Maximum of {{action.name}} applyments"
+          ng-model="action.maxcnt"
+          ng-change="recalculateBudget()"
+          ng-disabled="!action.selected"
+          required/>
+         <span ng-if="action.selected" ng-show="EditForm.max_{{action.id}}.$error.required && !EditForm.$pristine"
+         class="help-block">A max count for that action is required, if you checked the action active.</span>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-4" ng-if="action.selected">
+      <div class="form-group">
+        <label for="kinds_{{action.id}}">Kinds</label>
+        <input type="text" class="form-control input-sm" id="kinds_{{action.id}}" name="kinds_{{action.id}}"
+        placeholder="Kinds of Competitions for {{action.name}} applyments"
+        title="Kinds of Competitions for {{action.name}} applyments"
+        ng-model="action.kinds"
+        ng-disabled="!action.selected"/>
+      </div>
+    </div>
+  </div>
+</div>

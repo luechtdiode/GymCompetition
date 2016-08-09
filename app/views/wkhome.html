@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row row-content" ng-controller="WKIndexController">
+      <div class="col-xs-12 col-sm-7">
+        <h3>Competition Details</h3>
+        <ul class="media-list">
+          <h3 ng-if="!showCompetition">{{comptetitionmessage}}</h3>
+          <li class="media" ng-if="showCompetition">
+            <div ng-include="'views/competition-media.html'"></div>
+            <h4>Program</h4>
+            <ul>
+              <li><a href="">08:30 - 10:30: K1, K2</a></li>
+              <li><a href="">10:30 - 12:30: K3, K4</a></li>
+            </ul>
+            <h4>Results</h4>
+            <ul>
+              <li><a href="">K1 M</a></li>
+              <li><a href="">K1 F</a></li>
+              <li><a href="">K2 M</a></li>
+              <li><a href="">K2 F</a></li>
+            </ul>
+          </li>
+          <h3>Club Details</h3>
+          <h3 ng-if="!showClub">{{clubmessage}}</h3>
+          <li class="media" ng-if="showClub">
+            <div ng-include="'views/club-media.html'"></div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-5">
+        <h3>Sponsors</h3>
+        <ul class="media-list">
+          <h3 ng-if="!showSponsor">{{sponsormessage}}</h3>
+          <li class="media" ng-if="showSponsor" ng-repeat="sponsor in sponsors | orderBy: 'name'">
+            <div ng-include="'views/sponsor-media.html'"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div>

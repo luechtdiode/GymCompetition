@@ -1,0 +1,42 @@
+    <div class="container">
+      <div class="row row-content" ng-controller="ClubsController">
+        <div class="col-xs-12" ng-if="!showClub">
+          <h3>{{message}}</h3>
+        </div>
+        <div class="col-xs-12" ng-if="showClub">
+          <button type="button" class="btn btn-success pull-right" ui-sref="app.registerclub">
+            Register as new Club
+          </button>
+
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation"
+            ng-class="{active:isSelected(1)}">
+            <a ng-click="select(1)"
+            aria-controls="all"
+            role="tab">All Clubs</a></li>
+            <li role="presentation"
+            ng-class="{active:isSelected(2)}">
+            <a ng-click="select(2)"
+            aria-controls="getu"
+            role="tab">GeTu</a></li>
+            <li role="presentation"
+            ng-class="{active:isSelected(3)}">
+            <a ng-click="select(3)"
+            aria-controls="kutu"
+            role="tab">KuTu</a></li>
+            <li role="presentation"
+            ng-class="{active:isSelected(4)}">
+            <a  ng-click="select(4)"
+            aria-controls="other"
+            role="tab">Other</a></li>
+          </ul>
+          <div class="tab-content">
+            <ul class="media-list">
+              <li class="media" ng-repeat="club in clubs | filter:filtText:cmpCompetition | orderBy: 'name'">
+                <div ng-include="'views/club-media.html'"></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
