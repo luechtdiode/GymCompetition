@@ -3,7 +3,7 @@
 	"version": "0.0.1",
   "private": true,
 	"scripts": {
-		"start": "node app.js"
+		"start": "node app/scripts/app.js"
 	},
   "devDependencies": {
     "browser-sync": "^2.11.1",
