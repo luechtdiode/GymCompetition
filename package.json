@@ -3,7 +3,6 @@
 	"version": "0.0.1",
   "private": true,
 	"scripts": {
-    "postinstall": "gulp",
 		"start": "node ./bin/www"
 	},
   "devDependencies": {
@@ -55,5 +54,5 @@
   },
 	"engines": {
 		"node": "4.x"
-	} 
+	}
 }
