@@ -75,21 +75,13 @@ angular.module('gymCompetitionApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', '
           controller: 'ClubDetailController'/*,
           resolve: {
             club: ['$stateParams','clubFactory', function($stateParams, clubFactory){
-              return clubFactory.get({id:parseInt($stateParams.id, 10)});
+              return clubFactory.get({id:$stateParams.id});
             }],
             competitions: ['$stateParams','competitionFactory', function($stateParams, competitionFactory){
               return competitionFactory.query({clubid:parseInt($stateParams.id, 10)});
             }]
           }*/
         }
-      },
-      resolve: {
-        club: ['$stateParams', 'clubFactory', function($stateParams, clubFactory) {
-            return clubFactory.getClubs().get({id:parseInt($stateParams.id, 10)});
-        }]
-      },
-      breadcrumb: {
-          title: 'Clubdetails {club.name}'
       }
     })
 
@@ -100,14 +92,6 @@ angular.module('gymCompetitionApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', '
           templateUrl: 'views/sponsordetails.html',
           controller: 'SponsorDetailController'
         }
-      },
-      resolve: {
-        sponsor: ['$stateParams', 'sponsorFactory', function($stateParams, sponsorFactory) {
-            return sponsorFactory.getSponsors().get({id:parseInt($stateParams.id, 10)});
-        }]
-      },
-      breadcrumb: {
-          title: 'Sponsor details {sponsor.name}'
       }
     })
 
@@ -221,14 +205,6 @@ angular.module('gymCompetitionApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', '
           templateUrl : 'views/edit-club.html',
           controller  : 'ClubController'
         }
-      },
-      resolve: {
-        club: ['authFactory', 'clubFactory', function(authFactory, clubFactory) {
-            return clubFactory.getClubs().get({id:authFactory.isMemberOfClub});
-        }]
-      },
-      breadcrumb: {
-          title: 'Edit Club details {club.name}'
       }
     })
 
@@ -240,14 +216,6 @@ angular.module('gymCompetitionApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', '
           templateUrl : 'views/edit-competition.html',
           controller  : 'EditCompetitionController'
         }
-      },
-      resolve: {
-        competition: ['$stateParams', 'competitionFactory', function($stateParams, competitionFactory) {
-            return competitionFactory.getCompetitions().get({id:parseInt($stateParams.id, 10)});
-        }]
-      },
-      breadcrumb: {
-          title: 'Edit Competition details {competition.name}'
       }
     })
 

@@ -6,7 +6,7 @@
     </a>
   </div>
   <div ng-if="!sponsor.editable"-->
-    <a ui-sref="app.clubdetails({id: club.id})">
+    <a ui-sref="app.clubdetails({id: club._id})">
       <img class="media-object img-thumbnail"
         ng-src={{club.image}} alt="Club {{club.name}}">
     </a>
@@ -18,7 +18,7 @@
     <span class="label label-warning">{{club.label}}</span></h2>
     <p>{{club.description}}</p>
     <div ng-if="club.editable">
-      <button type="button" class="btn btn-success pull-right" ui-sref="app.editclub">
+      <button type="button" class="btn btn-success pull-right" ui-sref="app.editclub({id: club._id})">
         Edit Club
       </button>
     </div>

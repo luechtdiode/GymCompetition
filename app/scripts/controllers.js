@@ -6,8 +6,8 @@ angular.module('gymCompetitionApp')
 //        .controller('HeaderController', ['$scope', '$state', '$rootScope', 'ngDialog', 'authFactory', function ($scope, $state, $rootScope, ngDialog, authFactory) {
 
             $scope.loggedIn = false;
-            $scope.clubid = -1;
-            $scope.sponsorid = -1;
+            $scope.clubid = "-1";
+            $scope.sponsorid = "-1";
             $scope.username = '';
 
             if(authFactory.isAuthenticated()) {
@@ -24,20 +24,23 @@ angular.module('gymCompetitionApp')
             $scope.logOut = function() {
                 authFactory.logout();
                 $scope.loggedIn = false;
-                $scope.clubid = 0;
-                $scope.sponsorid = 0;
+                $scope.clubid = "-1";
+                $scope.sponsorid = "-1";
                 $scope.username = '';
             };
 
             $rootScope.$on('login:Successful', function () {
+                console.log("in controller:" + authFactory.getUsername());
                 $scope.loggedIn = authFactory.isAuthenticated();
                 $scope.username = authFactory.getUsername();
                 $scope.clubid = authFactory.isMemberOfClub();
                 $scope.sponsorid = authFactory.isMemberOfSponsor();
-                if(authFactory.isMemberOfClub() > -1) {
+                if(authFactory.isMemberOfClub() > '-1') {
+                  console.log("in controller goto club:" + authFactory.isMemberOfClub());
                   $state.go('app.clubdetails', {id: authFactory.isMemberOfClub()});
                 }
                 else {
+                  console.log("in controller goto sponsor:" + authFactory.isMemberOfSponsor());
                   $state.go('app.sponsordetails', {id: authFactory.isMemberOfSponsor()});
                 }
             });
@@ -188,16 +191,16 @@ angular.module('gymCompetitionApp')
                     $scope.registration.youtubehandle = sponsor.youtubehandle;
 
                     for(var a in $scope.actions) {
-                      if($scope.actions[a].id !== undefined) {
+                      if($scope.actions[a]._id !== undefined) {
                         var sat = $scope.actions[a];
                         var found = false;
                         for(var b in sponsor.sponsoractions) {
                           var sa = sponsor.sponsoractions[b];
-                          if(sa.action === sat.id) {
+                          if(sa.action === sat._id) {
                             found = true;
                             $scope.registration.regactions.push(
                               {
-                                action:$scope.actions[a].id,
+                                action:$scope.actions[a]._id,
                                 name:$scope.actions[a].name,
                                 selected:true,
                                 bidperaction:sa.bidperaction,
@@ -210,7 +213,7 @@ angular.module('gymCompetitionApp')
                         if(!found) {
                           $scope.registration.regactions.push(
                             {
-                              action:$scope.actions[a].id,
+                              action:$scope.actions[a]._id,
                               name:$scope.actions[a].name,
                               selected:false,
                               bidperaction:10.0,
@@ -234,6 +237,7 @@ angular.module('gymCompetitionApp')
                 $scope.registration.regactions = $scope.registration.regactions.filter(function(action){return action.selected;});
                 for(var i in $scope.registration.regactions) {
                   $scope.registration.regactions[i] = {
+                    _id:$scope.registration.regactions[i].action,
                     action:$scope.registration.regactions[i].action,
                     bidperaction:$scope.registration.regactions[i].bidperaction,
                     maxcnt:$scope.registration.regactions[i].maxcnt,
@@ -241,8 +245,7 @@ angular.module('gymCompetitionApp')
                   };
                 }
                 console.log('Saving sponsor', $scope.registration);
-                sponsorFactory.getSponsors().save({
-                  id: authFactory.isMemberOfSponsor(),
+                sponsorFactory.getSponsors().update({id: authFactory.isMemberOfSponsor()},{
                   name: $scope.registration.company,
                   homepage:  $scope.registration.homepage,
                   googleplushandle:$scope.registration.googleplushandle,
@@ -268,6 +271,7 @@ angular.module('gymCompetitionApp')
             function(club){
               $scope.registration = club;
               $scope.registration.kind = "" + club.kind;
+              console.log($scope.registration);
             },
             function(response) {
                 console.log("Error: "+response.status + " " + response.statusText);
@@ -276,8 +280,7 @@ angular.module('gymCompetitionApp')
 
           $scope.doSave = function() {
             console.log('Saving club', $scope.registration);
-            clubFactory.getClubs().save({
-              id:authFactory.isMemberOfClub(),
+            clubFactory.getClubs().update({id:authFactory.isMemberOfClub()}, {
               name: $scope.registration.name,
               image: "images/verein-flag.png",
               label: $scope.registration.label,
@@ -311,7 +314,7 @@ angular.module('gymCompetitionApp')
             return $scope.competition.budget;
           };
 
-          clubFactory.getClubs().get({id:parseInt($stateParams.id, 10)}).$promise.then(
+          clubFactory.getClubs().get({id:$stateParams.id}).$promise.then(
             function(club){
               $scope.club = club;
               $scope.actions = actionsFactory.getActions().query(
@@ -319,7 +322,7 @@ angular.module('gymCompetitionApp')
                   $scope.actions = success;
                   $scope.competition = {
                     club: $scope.club.name,
-                    clubid: $scope.club.id,
+                    clubid: $scope.club._id,
                     image: 'images/wettkampf.png',
                     name: '',
                     date : new Date().toISOString(),
@@ -331,10 +334,10 @@ angular.module('gymCompetitionApp')
                     sponsoractions : []
                   };
                   for(var a in $scope.actions) {
-                    if($scope.actions[a].id !== undefined) {
+                    if($scope.actions[a]._id !== undefined) {
                       $scope.competition.sponsoractions.push(
                         {
-                          action:$scope.actions[a].id,
+                          action:$scope.actions[a]._id,
                           name:$scope.actions[a].name,
                           selected:true,
                           costperaction:10.0,
@@ -357,6 +360,7 @@ angular.module('gymCompetitionApp')
                 $scope.competition.sponsoractions = $scope.competition.sponsoractions.filter(function(action){return action.selected;});
                 for(var i in $scope.competition.sponsoractions) {
                   $scope.competition.sponsoractions[i] = {
+                    _id: $scope.competition.sponsoractions[i].action,
                     action: $scope.competition.sponsoractions[i].action,
                     costperaction: $scope.competition.sponsoractions[i].costperaction,
                     maxcnt: $scope.competition.sponsoractions[i].maxcnt
@@ -374,6 +378,7 @@ angular.module('gymCompetitionApp')
 
                 competitionFactory.getCompetitions().save({
                   clubid: $scope.competition.clubid,
+                  club: $scope.competition.club,
                   image: $scope.competition.image,
                   name: $scope.competition.name,
                   location: $scope.competition.location,
@@ -408,7 +413,7 @@ angular.module('gymCompetitionApp')
             return $scope.competition.budget;
           };
 
-          competitionFactory.getCompetitions().get({id:parseInt($stateParams.id, 10)}).$promise.then(
+          competitionFactory.getCompetitions().get({id:$stateParams.id}).$promise.then(
             function(competition){
               $scope.competition = competition;
               $scope.competition.date = new Date($scope.competition.dates[0]);
@@ -421,16 +426,16 @@ angular.module('gymCompetitionApp')
                   $scope.actions = success;
                   var saMaterialized = [];
                   for(var a in $scope.actions) {
-                    if($scope.actions[a].id !== undefined) {
+                    if($scope.actions[a]._id !== undefined) {
                       var sat = $scope.actions[a];
                       var found = false;
                       for(var b in competition.sponsoractions) {
                         var sa = competition.sponsoractions[b];
-                        if(sa.action === sat.id) {
+                        if(sa.action === sat._id) {
                           found = true;
                           saMaterialized.push(
                             {
-                              action:$scope.actions[a].id,
+                              action:$scope.actions[a]._id,
                               name:$scope.actions[a].name,
                               selected:true,
                               costperaction:sa.costperaction,
@@ -442,7 +447,8 @@ angular.module('gymCompetitionApp')
                       if(!found) {
                         saMaterialized.push(
                           {
-                            action:$scope.actions[a].id,
+                            _id:$scope.actions[a]._id,
+                            action:$scope.actions[a]._id,
                             name:$scope.actions[a].name,
                             selected:false,
                             costperaction:10.0,
@@ -467,6 +473,7 @@ angular.module('gymCompetitionApp')
                 $scope.competition.sponsoractions = $scope.competition.sponsoractions.filter(function(action){return action.selected;});
                 for(var i in $scope.competition.sponsoractions) {
                   $scope.competition.sponsoractions[i] = {
+                    _id: $scope.competition.sponsoractions[i].action,
                     action: $scope.competition.sponsoractions[i].action,
                     costperaction: $scope.competition.sponsoractions[i].costperaction,
                     maxcnt: $scope.competition.sponsoractions[i].maxcnt
@@ -482,9 +489,9 @@ angular.module('gymCompetitionApp')
                   $scope.competition.dates = [new Date($scope.competition.date).toISOString(), new Date($scope.competition.date2).toISOString()];
                 }
 
-                competitionFactory.getCompetitions().save({
-                  id: $scope.competition.id,
+                competitionFactory.getCompetitions().update({id:$scope.competition._id}, {
                   clubid: $scope.competition.clubid,
+                  club: $scope.competition.club,
                   image: $scope.competition.image,
                   name: $scope.competition.name,
                   location: $scope.competition.location,
@@ -506,10 +513,10 @@ angular.module('gymCompetitionApp')
 
           $scope.showClub = false;
           $scope.clubmessage="Loading ...";
-          $scope.club = clubFactory.getClubs().get({id:0})
+          $scope.club = clubFactory.getClubs().query()
             .$promise.then(
                 function(response){
-                    $scope.club = response;
+                    $scope.club = response[0];
                     $scope.showClub = true;
                 },
                 function(response) {
@@ -519,10 +526,10 @@ angular.module('gymCompetitionApp')
 
           $scope.showSponsor = false;
           $scope.sponsormessage="Loading ...";
-          $scope.sponsor = sponsorFactory.getSponsors().get({id:0})
+          $scope.sponsor = sponsorFactory.getSponsors().query()
             .$promise.then(
                 function(response){
-                    $scope.sponsor = response;
+                    $scope.sponsor = response[0];
                     $scope.showSponsor = true;
                 },
                 function(response) {
@@ -532,10 +539,10 @@ angular.module('gymCompetitionApp')
 
           $scope.showCompetition = false;
           $scope.comptetitionmessage = "Loading ...";
-          $scope.competition = competitionFactory.getCompetitions().get({id:1})
+          $scope.competition = competitionFactory.getCompetitions().query()
             .$promise.then(
                 function(response){
-                    $scope.competition = response;
+                    $scope.competition = response[0];
                     $scope.showCompetition = true;
                 },
                 function(response) {
@@ -555,8 +562,9 @@ angular.module('gymCompetitionApp')
             $scope.competitions = competitionFactory.getCompetitions().query(
                 function(response) {
                     for(var i in response) {
-                      if(response[i].id !== undefined) {
-                        response[i].editable = authFactory.isMemberOfClub() > -1 && authFactory.isMemberOfClub() === response[i].clubid;
+                      console.log(response[i]);
+                      if(response[i]._id !== undefined) {
+                        response[i].editable = authFactory.isMemberOfClub() > '-1' && authFactory.isMemberOfClub() === response[i].clubid._id;
                       }
                     }
                     $scope.competitions = response;
@@ -619,8 +627,8 @@ angular.module('gymCompetitionApp')
             $scope.clubs = clubFactory.getClubs().query(
                 function(response) {
                     for(var i in response) {
-                      if(response[i].id !== undefined) {
-                        response[i].editable = authFactory.isMemberOfClub() > -1 && authFactory.isMemberOfClub() === response[i].id;
+                      if(response[i]._id !== undefined) {
+                        response[i].editable = authFactory.isMemberOfClub() > '-1' && authFactory.isMemberOfClub() === response[i]._id;
                       }
                     }
                     $scope.clubs = response;
@@ -678,8 +686,9 @@ angular.module('gymCompetitionApp')
             $scope.sponsors = sponsorFactory.getSponsors().query(
                 function(response) {
                     for(var i in response) {
-                      if(response[i].id !== undefined) {
-                        response[i].editable = authFactory.isMemberOfSponsor() > -1 && authFactory.isMemberOfSponsor() === response[i].id;
+                      console.log(response[i]);
+                      if(response[i]._id !== undefined) {
+                        response[i].editable = authFactory.isMemberOfSponsor() > '-1' && authFactory.isMemberOfSponsor() === response[i]._id;
                       }
                     }
                     $scope.sponsors = response;
@@ -696,8 +705,8 @@ angular.module('gymCompetitionApp')
             $scope.competitionmessage = "loading ...";
             $scope.showClub = false;
             $scope.showCompetition = false;
-            $scope.isClubUser = authFactory.isMemberOfClub() === parseInt($stateParams.id, 10);
-            $scope.club = clubFactory.getClubs().get({id:parseInt($stateParams.id, 10)}).$promise.then(
+            $scope.isClubUser = authFactory.isMemberOfClub() === $stateParams.id;
+            $scope.club = clubFactory.getClubs().get({id:$stateParams.id}).$promise.then(
                 function(response){
                     $scope.club = response;
                     $scope.showClub = true;
@@ -706,11 +715,11 @@ angular.module('gymCompetitionApp')
                     $scope.clubmessage = "Error: "+response.status + " " + response.statusText;
                 }
             );
-            $scope.competitions = competitionFactory.getCompetitions().query({clubid:parseInt($stateParams.id, 10)},
+            $scope.competitions = competitionFactory.getCompetitions().query({clubid:$stateParams.id},
                 function(response) {
                     for(var i in response) {
-                      if(response[i].id !== undefined) {
-                        response[i].editable = authFactory.isMemberOfClub() > -1 && authFactory.isMemberOfClub() === response[i].clubid;
+                      if(response[i].clubid !== undefined) {
+                        response[i].editable = authFactory.isMemberOfClub() !== '-1' && authFactory.isMemberOfClub() === response[i].clubid;
                       }
                     }
                     $scope.competitions = response;
@@ -728,10 +737,14 @@ angular.module('gymCompetitionApp')
             $scope.competitionmessage = "loading ...";
             $scope.showSponsor = false;
             $scope.showCompetition = false;
-            $scope.isSponsorUser = authFactory.isMemberOfSponsor() === parseInt($stateParams.id, 10);
-            $scope.sponsor = sponsorFactory.getSponsors().get({id:parseInt($stateParams.id, 10)}).$promise.then(
+            console.log( $stateParams.id);
+            console.log( authFactory.isMemberOfSponsor());
+            $scope.isSponsorUser = authFactory.isMemberOfSponsor() === $stateParams.id;
+            console.log($scope.isSponsorUser );
+            $scope.sponsor = sponsorFactory.getSponsors().get({id:$stateParams.id}).$promise.then(
                 function(response){
                     $scope.sponsor = response;
+                    console.log(response);
                     $scope.sponsor.editable = $scope.isSponsorUser;
                     $scope.showSponsor = true;
                     $scope.competitions = competitionFactory.getCompetitions().query(
@@ -749,13 +762,15 @@ angular.module('gymCompetitionApp')
                                   filtered.push(competition[j]);
                                   found = true;
                                 }
-                                else for(var k in $scope.sponsor.sponsoractions[i].kinds) {
-                                  if(competition[j].kind.indexOf($scope.sponsor.sponsoractions[i].kinds[k]) > -1) {
-                                    filtered.push(competition[j]);
-                                    found = true;
-                                  }
-                                  if(found) {
-                                    break;
+                                else {
+                                  for(var k in $scope.sponsor.sponsoractions[i].kinds) {
+                                    if(competition[j].kind.indexOf($scope.sponsor.sponsoractions[i].kinds[k]) > -1) {
+                                      filtered.push(competition[j]);
+                                      found = true;
+                                    }
+                                    if(found) {
+                                      break;
+                                    }
                                   }
                                 }
                               }
@@ -790,7 +805,7 @@ angular.module('gymCompetitionApp')
           $scope.sponsormessage="Loading ...";
           $scope.showClub = false;
           $scope.clubmessage="Loading ...";
-          $scope.competition = competitionFactory.getCompetitions().get({id:parseInt($stateParams.id, 10)})
+          $scope.competition = competitionFactory.getCompetitions().get({id:$stateParams.id})
             .$promise.then(
                 function(response){
                     $scope.competition = response;
@@ -823,13 +838,15 @@ angular.module('gymCompetitionApp')
                                         filtered.push(sponsor[j]);
                                         found = true;
                                       }
-                                      else for(var k in sponsor[j].sponsoractions[h].kinds) {
-                                        if($scope.competition.kind.indexOf(sponsor[j].sponsoractions[h].kinds[k]) > -1) {
-                                          filtered.push(sponsor[j]);
-                                          found = true;
-                                        }
-                                        if(found) {
-                                          break;
+                                      else {
+                                        for(var k in sponsor[j].sponsoractions[h].kinds) {
+                                          if($scope.competition.kind.indexOf(sponsor[j].sponsoractions[h].kinds[k]) > -1) {
+                                            filtered.push(sponsor[j]);
+                                            found = true;
+                                          }
+                                          if(found) {
+                                            break;
+                                          }
                                         }
                                       }
                                     }

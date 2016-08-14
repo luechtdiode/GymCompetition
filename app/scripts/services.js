@@ -33,32 +33,23 @@ angular.module('gymCompetitionApp')
     var TOKEN_KEY = 'GCToken';
     var isAuthenticated = false;
     var username = '';
-    var authToken = undefined;
-    var isMemberOfClub = -1;
-    var isMemberOfSponsor = -1;
-    function getUsers() {
-      return $resource(baseURL+"user/:id",null,  {'update':{method:'PUT' }});
-    }
-    function getClubs() {
-      return $resource(baseURL+"clubs/:id",null,  {'update':{method:'PUT' }});
-    }
-    function getSponsors() {
-      return $resource(baseURL+"sponsors/:id",null,  {'update':{method:'PUT' }});
-    }
+    var authToken;
+    var isMemberOfClub = '-1';
+    var isMemberOfSponsor = '-1';
     function useCredentials(credentials) {
       isAuthenticated = true;
       username = credentials.username;
       authToken = credentials.token;
       isMemberOfClub = credentials.isMemberOfClub;
       isMemberOfSponsor = credentials.isMemberOfSponsor;
-
+      console.log("username set: " + username);
       // Set the token as header for your requests!
       $http.defaults.headers.common['x-access-token'] = authToken;
     }
     function destroyUserCredentials() {
       authToken = undefined;
-      isMemberOfClub = -1;
-      isMemberOfSponsor = -1;
+      isMemberOfClub = "-1";
+      isMemberOfSponsor = "-1";
       username = '';
       isAuthenticated = false;
       $http.defaults.headers.common['x-access-token'] = authToken;
@@ -75,30 +66,24 @@ angular.module('gymCompetitionApp')
       useCredentials(credentials);
     }
     authFac.login = function(loginData) {
-/*      $resource(baseURL + "users/login")
+      $resource(baseURL + "users/login")
         .save(loginData,
           function(response) {
             storeUserCredentials({
-              username:loginData.username,
+              username:response.username,
               token: response.token,
               isMemberOfClub: response.isMemberOfClub,
               isMemberOfSponsor: response.isMemberOfSponsor
             });
             $rootScope.$broadcast('login:Successful');
+            console.log("login:Successful");
           },
-          function(response){
+          function(){
             isAuthenticated = false;
-            var message = '\
-              <div class="ngdialog-message">\
-              <div><h3>Login Unsuccessful</h3></div>' +
-                '<div><p>' +  response.data.err.message + '</p><p>' +
-                  response.data.err.name + '</p></div>' +
-              '<div class="ngdialog-buttons">\
-                  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click=confirm("OK")>OK</button>\
-              </div>';
               //ngDialog.openConfirm({ template: message, plain: 'true'});
           }
-        );*/
+        );
+        /*
         getUsers().query({username:loginData.username, password:loginData.password},
           function(found){
 
@@ -119,7 +104,7 @@ angular.module('gymCompetitionApp')
           function(failed){
             console.log("login:failed" + failed);
             isAuthenticated = false;
-          });
+          });*/
     };
     authFac.logout = function() {
       //$resource(baseURL + "users/logout").get(function(response){});
@@ -127,9 +112,11 @@ angular.module('gymCompetitionApp')
       $rootScope.$broadcast('logout:Successful');
     };
     authFac.register = function(registerData) {
-/*      $resource(baseURL + "users/register")
+      console.log("Register: " + registerData);
+      $resource(baseURL + "users/register")
         .save(registerData,
           function(response) {
+            console.log("Registered: " + response);
             authFac.login({username:registerData.username, password:registerData.password});
             if (registerData.rememberMe) {
               $localStorage.storeObject('userinfo',
@@ -138,14 +125,11 @@ angular.module('gymCompetitionApp')
             $rootScope.$broadcast('registration:Successful');
           },
           function(response){
-            var message = '\
-              <div class="ngdialog-message">\
-              <div><h3>Registration Unsuccessful</h3></div>' +
-                '<div><p>' + response.data.err.message +
-                '</p><p>' + response.data.err.name + '</p></div>';
+            console.log("Not registered: " + response);
             //ngDialog.openConfirm({ template: message, plain: 'true'});
           }
-        );*/
+        );
+        /*
         if(registerData.company === undefined || registerData.company === '') {
           getClubs().query(
             function(clubs){
@@ -275,7 +259,7 @@ angular.module('gymCompetitionApp')
             function(response) {
                 console.log("Error: "+response.status + " " + response.statusText);
             });
-        }
+        }*/
 
     };
     authFac.isAuthenticated = function() {

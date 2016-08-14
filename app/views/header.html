@@ -36,10 +36,10 @@
               <li ng-if="!loggedIn"><a ui-sref="app.login">
               <span class="glyphicon glyphicon-log-in"></span> Login</a>
               </li>
-              <li ng-if="loggedIn && clubid > 0">
+              <li ng-if="loggedIn && clubid > '-1'">
               <a ui-sref="app.editclub">{{username}} (as Club)</a>
               </li>
-              <li ng-if="loggedIn && sponsorid > 0">
+              <li ng-if="loggedIn && sponsorid > '-1'">
               <a ui-sref="app.editsponsor">{{username}} (as Sponsor)</a>
               </li>
               <li ng-if="loggedIn">
