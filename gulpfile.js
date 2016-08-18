@@ -51,7 +51,7 @@ gulp.task('imagemin', function() {
 gulp.task('copyfonts', ['clean'], function() {
    gulp.src('./bower_components/font-awesome/fonts/**/*.{ttf,woff,eof,svg}*')
    .pipe(gulp.dest('./public/fonts'));
-   gulp.src('./bower_components/bootstrap/public/fonts/**/*.{ttf,woff,eof,svg}*')
+   gulp.src('./bower_components/bootstrap/dist/fonts/**/*.{ttf,woff,eof,svg}*')
    .pipe(gulp.dest('./public/fonts'));
 });
 
