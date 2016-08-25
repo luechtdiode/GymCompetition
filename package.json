@@ -41,10 +41,32 @@
     "morgan": "~1.6.1",
     "passport": "~0.3.2",
     "passport-facebook": "~2.1.0",
+    "passport-google-oauth": "^1.0.0",
+    "passport-instagram": "^1.0.0",
     "passport-local": "~1.0.0",
     "passport-local-mongoose": "~4.0.0",
     "serve-favicon": "~2.3.0"
   },
+  "cordovaPlugins": [
+    "cordova-plugin-device",
+    "cordova-plugin-console",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-statusbar",
+    "ionic-plugin-keyboard",
+    "de.appplant.cordova.plugin.local-notification",
+    {
+      "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
+      "id": "cordova-plugin-x-toast"
+    },
+    "cordova-plugin-camera",
+    "org.apache.cordova.camera",
+    "cordova-plugin-image-picker",
+    "cordova-plugin-vibration"
+  ],
+  "cordovaPlatforms": [
+    "android"
+  ],
   "repository": {
     "type": "git",
     "url": "https://hub.jazz.net/git/cftest/GymCompetition/"
