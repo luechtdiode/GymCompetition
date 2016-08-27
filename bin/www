@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 var app = require('../server/app');
+var config = require('../server/config');
 var debug = require('debug')('rest-server:server');
 var http = require('http');
 var https = require('https');
@@ -54,6 +55,7 @@ catch(err) {
     console.log(err);
     console.log('guessing now - run on mbx ...');
     app.set('secPort', port);
+    config.devmode = false;
 }
 
 /**

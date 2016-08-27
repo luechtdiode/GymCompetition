@@ -85,7 +85,7 @@ app.enable('trust proxy');
 // to know whether the request was via http or https.
 app.all('*', function(req, res, next){
   console.log('req start: ',req.secure, req.hostname, req.url, app.get('port'), app.get('secPort'));
-  if (req.secure) {
+  if (req.secure || config.devmode) {
     return next();
   };
   if(app.get('secPort')) {
@@ -101,13 +101,15 @@ var User = require('./models/user');
 app.use(passport.initialize());
 
 app.use(express.static(path.join(__dirname, '../public')));
+app.use('/api/', express.static(path.join(__dirname, '../public')));
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/clubs', clubRouter);
-app.use('/sponsors', sponsorRouter);
-app.use('/competitions', competitionRouter);
-app.use('/actions', actionRouter);
+app.use('/api/', routes);
+app.use('/api/users', users);
+app.use('/api/clubs', clubRouter);
+app.use('/api/sponsors', sponsorRouter);
+app.use('/api/competitions', competitionRouter);
+app.use('/api/actions', actionRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

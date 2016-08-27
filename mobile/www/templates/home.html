@@ -1,0 +1,36 @@
+<ion-view view-title="Gym Competition">
+  <ion-content>
+    <div class="list">
+      <div class="item item-divider">
+        Next Competition
+
+      </div>
+      <a href="#/app/competitiondetails/{{competition._id}}" class="item item-thumbnail-left item-text-wrap">
+        <img ng-src="{{baseURL+competition.image}}" alt="{{competition.name}}">
+        <h2>{{competition.name}}</h2>
+        <p>{{competition.description}}</br>
+        {{competition.location}}</p>
+        <span class="badge badge-assertive">{{competition.kind}}</span>
+      </a>
+      <div class="item item-divider">
+        This Month's Club
+      </div>
+      <a href="#/app/clubdetails/{{club._id}}" class="item item-thumbnail-left item-text-wrap">
+        <img ng-src="{{baseURL+club.image}}" alt="{{club.name}}">
+        <h2>{{club.name}}</h2>
+        <p>{{club.description}}</p>
+        <span class="badge badge-assertive">{{club.label}}</span>
+      </a>
+      <div class="item item-divider">
+        Meet our Sponsors
+      </div>
+      <a href="#/app/sponsordetails/{{sponsor._id}}" class="item item-thumbnail-left item-text-wrap">
+        <img ng-src="{{baseURL+sponsor.image}}" alt="{{sponsor.name}}">
+        <h2>{{sponsor.name}}</h2>
+        <p>
+          {{sponsor.slogan}}
+        </p>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

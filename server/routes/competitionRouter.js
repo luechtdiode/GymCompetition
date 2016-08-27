@@ -47,20 +47,47 @@ competitionRouter.route('/')
     });
 });
 
-competitionRouter.route('/:id')
+competitionRouter.route('/next')
 .get(function (req, res, next) {
-    competitiones.findById(req.params.id)
+    var today = new Date();
+    competitiones.findOne({ $or: [{"date" : {$gte: today}}, {"date" : {$eq: today}}]})
         .populate('clubid')
         .populate('action')
         .exec(function (err, competition) {
-          if (err) {
-            next(err);
+          if (!competition || err) {
+            competitiones.findOne()
+                .populate('clubid')
+                .populate('action')
+                .exec(function (err, competition) {
+                  if (err) {
+                    next(err);
+                  }
+                  else {
+                    res.json(competition);
+                  }
+            })
           }
           else {
             res.json(competition);
           }
     });
 })
+
+competitionRouter.route('/:id')
+.get(function (req, res, next) {
+    competitiones.findById(req.params.id)
+      .populate('clubid')
+      .populate('action')
+      .exec(function (err, competition) {
+        if (err) {
+          next(err);
+        }
+        else {
+          res.json(competition);
+        }
+      });
+    }
+)
 
 .put(Verify.verifyOrdinaryUser, function (req, res, next) {
     competitiones.findByIdAndUpdate(req.params.id, {

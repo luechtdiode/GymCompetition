@@ -49,6 +49,19 @@ clubRouter.route('/')
     });
 });
 
+clubRouter.route('/month')
+.get(function (req, res, next) {
+    clubes.findOne()
+        .exec(function (err, competition) {
+          if (err) {
+            next(err);
+          }
+          else {
+            res.json(competition);
+          }
+    });
+});
+
 clubRouter.route('/:id')
 .get(function (req, res, next) {
     clubes.findById(req.params.id)

@@ -5,3 +5,4 @@ npm install
 bower install
 #npm install gulp --save
 gulp
+#node ./bin/www

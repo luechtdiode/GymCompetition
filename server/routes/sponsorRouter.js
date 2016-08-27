@@ -45,6 +45,19 @@ sponsorRouter.route('/')
     });
 });
 
+sponsorRouter.route('/month')
+.get(function (req, res, next) {
+    sponsores.findOne()
+        .exec(function (err, competition) {
+          if (err) {
+            next(err);
+          }
+          else {
+            res.json(competition);
+          }
+    });
+});
+
 sponsorRouter.route('/:sponsorId')
 .get(function (req, res, next) {
     sponsores.findById(req.params.sponsorId)

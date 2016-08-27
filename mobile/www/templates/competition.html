@@ -1,0 +1,51 @@
+<ion-view view-title="{{competition.name}}">
+  <ion-nav-buttons side="secondary">
+      <div class="buttons">
+        <button class="button button-icon icon ion-more"
+        ng-click="showPopover($event)"></button>
+      </div>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="item item-thumbnail-left item-text-wrap">
+      <img ng-src="{{baseURL+competition.image}}" alt="{{competition.name}}">
+      <h2>{{competition.name}}</h2>
+      <p>{{competition.description}}</br>
+      <div ng-repeat="date in competition.dates">
+      <span><i class="ion-ios-calendar">
+        </i> {{date | date: 'MM-dd-yyyy'}}
+      </span>
+      </div>
+      <cite>{{competition.location}}, {{competition.club}}</cite></p>
+      <span class="badge badge-assertive">{{competition.kind}}</span>
+      <h2>Results for {{$scope.cathegory}}</h2>
+    </div>
+    <ion-list >
+      <ion-item ng-repeat="result in results" class="item item-avatar">
+        <img src="images/verein.png"/>
+        <h2>{{result.rang}}</h2>
+        <p>{{result.name}}</p>
+        <span class="item-note">
+          d: 12.8, e: 43.2, Endnote: 53.1
+        </span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <div class="tabs-striped">
+   <ul class="tabs">
+       <li ng-class="{active:isSelected('K1')}" class="tab-item badge badge-balanced">
+           <a ng-click="select('K1')">K1</a></li>
+       <li ng-class="{active:isSelected('K2')}" class="tab-item badge badge-balanced">
+           <a ng-click="select('K2')">K2</a></li>
+       <li ng-class="{active:isSelected('K3')}" class="tab-item badge badge-energized">
+           <a ng-click="select('K3')">K3</a></li>
+       <li ng-class="{active:isSelected('K4')}" class="tab-item badge badge-calm">
+           <a  ng-click="select('K4')">K4</a></li>
+       <li ng-class="{active:isSelected('K5')}" class="tab-item badge badge-calm">
+           <a  ng-click="select('K5')">K5</a></li>
+       <li ng-class="{active:isSelected('K6')}" class="tab-item badge badge-calm">
+           <a  ng-click="select('K6')">K6</a></li>
+       <li ng-class="{active:isSelected('K7')}" class="tab-item badge badge-calm">
+           <a  ng-click="select('K7')">K7</a></li>
+   </ul>
+ </div>
+ </ion-view>

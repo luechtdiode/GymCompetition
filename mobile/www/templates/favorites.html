@@ -1,0 +1,22 @@
+<ion-view view-title="My Favorites">
+    <ion-nav-buttons side="secondary">
+      <div class="buttons">
+        <button class="button button-icon icon ion-ios-minus-outline"
+          ng-click="toggleDelete()"></button>
+      </div>
+    </ion-nav-buttons>
+  <ion-content>
+    <ion-list show-delete="shouldShowDelete">
+      <ion-item ng-repeat="competition in competitions | favoriteFilter:favorites" href="#/app/competitiondetails/{{competition._id}}" class="item-thumbnail-left" on-swipe-left="deleteFavorite(competition._id)">
+        <img ng-src="{{baseURL+competition.image}}">
+        <h2>{{competition.name}}
+         <span style="font-size:75%">{{competition.dates[0]}}</span>
+        <span class="badge badge-assertive">{{competition.kind}}</span></h2>
+        <p>{{competition.description}}</p>
+        <ion-delete-button class="ion-minus-circled"
+          ng-click="deleteFavorite(competition._id)">
+        </ion-delete-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+ </ion-view>

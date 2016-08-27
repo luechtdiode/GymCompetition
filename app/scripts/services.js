@@ -2,7 +2,7 @@
 
 angular.module('gymCompetitionApp')
 
-  .constant("baseURL","")
+  .constant("baseURL","/api/")
 
   .service('clubFactory', ['$resource', 'baseURL', function($resource, baseURL) {
     this.getClubs = function() {
