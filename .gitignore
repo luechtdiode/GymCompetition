@@ -2,6 +2,8 @@ bower_components
 node_modules
 dist
 public
+schemaprototypes
+testdata
 
 */bower_components
 */node_modules
@@ -12,6 +14,8 @@ public
 /node_modules/*
 /dist/*
 /public/*
+/bin/*.pem
+/bin/*.key
 
 .tmp
 *.log

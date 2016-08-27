@@ -811,7 +811,7 @@ angular.module('gymCompetitionApp')
                     $scope.competition = response;
                     $scope.showCompetition = true;
 
-                    $scope.club = clubFactory.getClubs().get({id:$scope.competition.clubid})
+                    $scope.club = clubFactory.getClubs().get({id:$scope.competition.clubid._id})
                       .$promise.then(
                           function(response){
                               $scope.club = response;
@@ -826,12 +826,11 @@ angular.module('gymCompetitionApp')
                           function(sponsor){
                             var filtered = [];
                               for (var j = 0; j < sponsor.length; j++) {
-                                sponsor[j].editable = sponsor[j].id === authFactory.isMemberOfSponsor();
+                                sponsor[j].editable = sponsor[j]._id === authFactory.isMemberOfSponsor();
                                 var found = false;
                                 for (var i = 0; i < $scope.competition.sponsoractions.length; i++) {
                                   for (var h = 0; h < sponsor[j].sponsoractions.length; h++) {
                                     if ( sponsor[j].sponsoractions[h].action === $scope.competition.sponsoractions[i].action &&
-                                         sponsor[j].sponsoractions[h].action === 0 &&
                                          sponsor[j].sponsoractions[h].bidperaction >= $scope.competition.sponsoractions[i].costperaction &&
                                          sponsor[j].sponsoractions[h].maxcnt >= 0 && $scope.competition.sponsoractions[i].maxcnt >= 0) {
                                       if(sponsor[j].sponsoractions[h].kinds === undefined || sponsor[j].sponsoractions[h].kinds.length === 0) {

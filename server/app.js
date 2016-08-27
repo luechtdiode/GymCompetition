@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var authenticate = require('./authenticate');
-
 var config = require('./config');
 
 var mongo = process.env.VCAP_SERVICES;
@@ -29,14 +28,30 @@ if (mongo) {
   conn_str = config.mongoUrl;
 }
 
-mongoose.connect(conn_str);
 var db = mongoose.connection;
-
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     // we're connected!
     console.log("Connected correctly to server");
 });
+db.on('disconnected', function() {
+  console.log('disconnected');
+  console.log('dbURI is: '+conn_str);
+  mongoose.connect(conn_str, {
+    server:{
+      auto_reconnect:true,
+      socketOptions: {
+        keepAlive: 1,
+        connectTimeoutMS: 30000 }
+      },
+      replset: {
+        socketOptions: {
+          keepAlive: 1,
+          connectTimeoutMS : 30000
+        }
+      }});
+});
+mongoose.connect(conn_str, {server:{auto_reconnect:true}});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -44,14 +59,13 @@ var clubRouter = require('./routes/clubRouter');
 var sponsorRouter = require('./routes/sponsorRouter');
 var competitionRouter = require('./routes/competitionRouter');
 var actionRouter = require('./routes/actionRouter');
-
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, '../public/images', 'favicon.ico')));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -59,23 +73,34 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Secure traffic only
+//app.use(middleware.transportSecurity());
+// Enable reverse proxy support in Express. This causes the
+// the "X-Forwarded-Proto" header field to be trusted so its
+// value can be used to determine the protocol. See
+// http://expressjs.com/api#app-settings for more details.
+app.enable('trust proxy');
 
+// Add a handler to inspect the req.secure flag (see
+// http://expressjs.com/api#req.secure). This allows us
+// to know whether the request was via http or https.
 app.all('*', function(req, res, next){
-  console.log("port: " + app.get('secPort'));
-    console.log('req start: ',req.secure, req.hostname, req.url, app.get('port'));
+  console.log('req start: ',req.secure, req.hostname, req.url, app.get('port'), app.get('secPort'));
   if (req.secure) {
     return next();
   };
-
-  res.redirect('https://'+req.hostname+':'+app.get('secPort')+req.url);
+  if(app.get('secPort')) {
+    res.redirect('https://'+req.hostname+':'+app.get('secPort')+req.url);
+  }
+  else {
+    res.redirect('https://' + req.headers.host + req.url);
+  }
 });
-
 
 // passport config
 var User = require('./models/user');
 app.use(passport.initialize());
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', routes);
 app.use('/users', users);

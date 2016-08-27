@@ -5,5 +5,5 @@ module.exports = {
         clientID: '1380585175300499',
         clientSecret: '92540013d51741f56b77e435d75aad5f',
         callbackURL: 'https://gymcompetition.mybluemix.net/users/facebook/callback'
-    }
+    },
 }

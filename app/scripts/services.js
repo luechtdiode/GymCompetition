@@ -2,7 +2,7 @@
 
 angular.module('gymCompetitionApp')
 
-  .constant("baseURL","https://gymcompetition.mybluemix.net/")
+  .constant("baseURL","")
 
   .service('clubFactory', ['$resource', 'baseURL', function($resource, baseURL) {
     this.getClubs = function() {
