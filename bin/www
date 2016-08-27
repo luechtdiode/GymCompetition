@@ -14,7 +14,6 @@ var fs = require('fs');
 var port = normalizePort(process.env.PORT || '3000');
 
 app.set('port', port);
-app.set('secPort', port + 443);
 
 /**
  * Create HTTP server.
@@ -38,6 +37,7 @@ try {
    key: fs.readFileSync(__dirname+'/private.key'),
    cert: fs.readFileSync(__dirname+'/certificate.pem')
   };
+  app.set('secPort', port + 443);
   var secureServer = https.createServer(options,app);
 
   /**
@@ -53,6 +53,7 @@ try {
 catch(err) {
     console.log(err);
     console.log('guessing now - run on mbx ...');
+    app.set('secPort', port);
 }
 
 /**
