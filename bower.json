@@ -15,7 +15,7 @@
     "Roland Seidel"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/luechtdiode/GymCompetition",
   "ignore": [
     "**/.*",
     "node_modules",
