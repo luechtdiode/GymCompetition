@@ -75,31 +75,7 @@ angular.module('GymCompetition', ['ionic', 'ngCordova', 'GymCompetition.controll
       }
     }
   })
-  /*
 
-  .state('app.aboutus', {
-      url: '/aboutus',
-      views: {
-        'mainContent': {
-          templateUrl: 'templates/aboutus.html',
-          controller: 'AboutController',
-          resolve: {
-            leaders: ['corporateFactory', function(corporateFactory) {
-              return corporateFactory.query();
-            }]
-          }
-        }
-      }
-    })
-   .state('app.contactus', {
-    url: '/contactus',
-    views: {
-      'mainContent': {
-        templateUrl: 'templates/contactus.html'
-      }
-    }
-  })
-*/
   .state('app.competitions', {
     url: '/competitions',
     views: {
@@ -147,21 +123,6 @@ angular.module('GymCompetition', ['ionic', 'ngCordova', 'GymCompetition.controll
       }
     }
   })
-
- .state('app.dishdetails', {
-    url: '/menu/:id',
-    views: {
-      'mainContent': {
-        templateUrl: 'templates/dishdetail.html',
-        controller: 'DishDetailController',
-        resolve: {
-          dish: ['$stateParams','menuFactory', function($stateParams, menuFactory){
-            return menuFactory.get({id:parseInt($stateParams.id, 10)});
-          }]
-        }
-      }
-    }
-  });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');

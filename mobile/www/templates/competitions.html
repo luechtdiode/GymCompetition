@@ -15,7 +15,7 @@
     <ion-list>
       <ion-item ng-repeat="competition in competitions | filter:filtText:cmpCompetition | orderBy: 'dates'"
                 href="#/app/competitiondetails/{{competition._id}}" class="item-thumbnail-left">
-        <img ng-src="{{baseURL+dish.image}}">
+        <img ng-src="{{baseURL+competition.image}}">
         <h2>{{competition.name}}
          <span style="font-size:75%">{{competition.kind}}</span>
         <span class="badge badge-assertive">{{competition.location}}</span></h2>

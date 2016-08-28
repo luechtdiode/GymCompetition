@@ -119,36 +119,6 @@ angular.module('GymCompetition.controllers', [])
       }
     };
   });
-
-  // Form data for the reservation modal
-  $scope.reservation = {};
-  // Create the reserve modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/reserve.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.reserveform = modal;
-  });
-
-  // Triggered in the reserve modal to close it
-  $scope.closeReserve = function() {
-    $scope.reserveform.hide();
-  };
-
-  // Open the reserve modal
-  $scope.reserve = function() {
-    $scope.reserveform.show();
-  };
-
-  // Perform the reserve action when the user submits the reserve form
-  $scope.doReserve = function() {
-    console.log('Doing reservation', $scope.reservation);
-
-    // Simulate a reservation delay. Remove this and replace with your reservation
-    // code if using a server system
-    $timeout(function() {
-      $scope.closeReserve();
-    }, 1000);
-  };
 })
 
 .controller('CompetitionsController', ['$scope', 'competitions', 'favoriteFactory', 'baseURL', '$ionicListDelegate', '$ionicPlatform', '$cordovaLocalNotification', '$cordovaToast',
@@ -161,7 +131,7 @@ angular.module('GymCompetition.controllers', [])
 
     $scope.addFavorite = function (index) {
         console.log("fav comp id is " + index);
-        favoriteFactory.addToFavorites(competitions[index]);
+        favoriteFactory.addToFavorites(competitions[index]._id);
         $ionicListDelegate.closeOptionButtons();
         $ionicPlatform.ready(function () {
           try {
@@ -170,7 +140,7 @@ angular.module('GymCompetition.controllers', [])
                 title: "Added Favorite",
                 text: $scope.competitions[index].name
             }).then(function () {
-                console.log('Added Favorite '+$scope.dishes[index].name);
+                console.log('Added Favorite '+$scope.competitiones[index].name);
             },
             function () {
                 console.log('Failed to add Notification ');
@@ -230,10 +200,6 @@ angular.module('GymCompetition.controllers', [])
     $scope.isSelected = function (checkTab) {
         return ($scope.tab === checkTab);
     };
-
-    $scope.toggleDetails = function() {
-        $scope.showDetails = !$scope.showDetails;
-    };
 }])
 
 .controller('FavoritesController',
@@ -290,38 +256,6 @@ angular.module('GymCompetition.controllers', [])
 
     $scope.shouldShowDelete = false;
   }
-}])
-
-.controller('ContactController', ['$scope', function($scope) {
-
-    $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
-
-    var channels = [{value:"tel", label:"Tel."}, {value:"Email",label:"Email"}];
-
-    $scope.channels = channels;
-    $scope.invalidChannelSelection = false;
-
-}])
-
-.controller('FeedbackController', ['$scope', 'feedbackFactory', function($scope,feedbackFactory) {
-
-    $scope.sendFeedback = function() {
-
-        console.log($scope.feedback);
-
-        if ($scope.feedback.agree && ($scope.feedback.mychannel == "")) {
-            $scope.invalidChannelSelection = true;
-            console.log('incorrect');
-        }
-        else {
-            $scope.invalidChannelSelection = false;
-            feedbackFactory.save($scope.feedback);
-            $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
-            $scope.feedback.mychannel="";
-            $scope.feedbackForm.$setPristine();
-            console.log($scope.feedback);
-        }
-    };
 }])
 
 .controller('CompetitionController',
@@ -415,12 +349,12 @@ angular.module('GymCompetition.controllers', [])
               return ($scope.cathegory === checkTab);
           };
 
-      $ionicPopover.fromTemplateUrl('templates/dish-detail-popover.html', {
+      $ionicPopover.fromTemplateUrl('templates/competition-popover.html', {
         scope: $scope
       }).then(function(popover) {
         $scope.popover = popover;
       });
-      // handle click-event from dishdetail.html header-button
+      // handle click-event from competitiondetail.html header-button
       $scope.showPopover = function($event) {
         $scope.popover.show($event);
       };
@@ -458,59 +392,9 @@ angular.module('GymCompetition.controllers', [])
           console.log('Toaster not supported for adding a favorite '+$scope.competition.name);
         }
       };
-
-      $ionicModal.fromTemplateUrl('templates/dish-comment.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function(modal) {
-        $scope.modalComment = modal;
-      });
-
-      // defining the model with default values:
-      $scope.mycomment = {rating:5, comment:"", author:"", date:""};
-
-      // implements add Comment, clicked on dish-detail-popover.html
-      $scope.addComment = function() {
-        $scope.modalComment.show();
-        $scope.popover.hide();
-      };
-
-      // actions, triggered from dish-comment.html
-      $scope.cancelComment = function() {
-        $scope.modalComment.hide();
-        $scope.mycomment = {rating:5, comment:"", author:"", date:""};
-      }
-      $scope.submitComment = function() {
-        $scope.mycomment.date = new Date().toISOString();
-        console.log($scope.mycomment);
-
-        $scope.dish.comments.push($scope.mycomment);
-
-        menuFactory.update({id:$scope.dish.id},$scope.dish);
-        $scope.modalComment.hide();
-        $scope.mycomment = {rating:5, comment:"", author:"", date:""};
-      };
     }
   ]
 )
-
-.controller('DishCommentController', ['$scope', 'menuFactory', function($scope,menuFactory) {
-
-    $scope.mycomment = {rating:5, comment:"", author:"", date:""};
-
-    $scope.submitComment = function () {
-
-        $scope.mycomment.date = new Date().toISOString();
-        console.log($scope.mycomment);
-
-        $scope.dish.comments.push($scope.mycomment);
-        menuFactory.update({id:$scope.dish.id},$scope.dish);
-
-        $scope.commentForm.$setPristine();
-
-        $scope.mycomment = {rating:5, comment:"", author:"", date:""};
-    }
-}])
 
 // implement the IndexController and About Controller here
 
@@ -520,13 +404,6 @@ angular.module('GymCompetition.controllers', [])
     $scope.competition = competition;
     $scope.club = club;
     $scope.sponsor = sponsor;
-}])
-
-.controller('AboutController', ['$scope', 'leaders', 'baseURL',
-  function($scope, leaders, baseURL) {
-    $scope.baseURL = baseURL;
-    $scope.leaders = leaders;
-    $scope.showLeaders = true;
 }])
 
 .filter('favoriteFilter', function () {

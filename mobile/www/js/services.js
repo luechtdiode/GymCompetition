@@ -156,10 +156,6 @@ angular.module('GymCompetition.services', ['ngResource'])
       };
     }])
 
-  .factory('feedbackFactory', ['$resource', 'baseURL', function($resource,baseURL) {
-    return $resource(baseURL+"feedback/:id");
-  }])
-
   .factory('favoriteFactory', ['$resource', '$localStorage', 'baseURL',
     function ($resource, $localStorage, baseURL) {
       var favFac = {};
@@ -189,6 +185,5 @@ angular.module('GymCompetition.services', ['ngResource'])
 
       return favFac;
   }])
-
 
 ;
