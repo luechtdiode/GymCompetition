@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('GymCompetition.services', ['ngResource'])
-  .constant("baseURL","https://gymcompetition.mybluemix.net/api/")
+  .constant("baseURL","/api/")
 
 
     .service('clubFactory', ['$resource', 'baseURL', function($resource, baseURL) {

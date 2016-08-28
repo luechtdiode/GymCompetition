@@ -3,7 +3,6 @@
 angular.module('gymCompetitionApp')
 
         .controller('HeaderController', ['$scope', '$state', '$rootScope', 'authFactory', function ($scope, $state, $rootScope, authFactory) {
-//        .controller('HeaderController', ['$scope', '$state', '$rootScope', 'ngDialog', 'authFactory', function ($scope, $state, $rootScope, ngDialog, authFactory) {
 
             $scope.loggedIn = false;
             $scope.clubid = "-1";
@@ -16,10 +15,6 @@ angular.module('gymCompetitionApp')
                 $scope.clubid = authFactory.isMemberOfClub();
                 $scope.sponsorid = authFactory.isMemberOfSponsor();
             }
-
-            $scope.openLogin = function () {
-                //ngDialog.open({ template: 'views/login.html', scope: $scope, className: 'ngdialog-theme-default', controller:"LoginController" });
-            };
 
             $scope.logOut = function() {
                 authFactory.logout();
@@ -144,10 +139,7 @@ angular.module('gymCompetitionApp')
 
             $scope.doRegister = function() {
                 console.log('Doing registration', $scope.registration);
-
                 authFactory.register($scope.registration);
-                //ngDialog.close();
-
             };
         }])
 

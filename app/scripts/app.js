@@ -72,15 +72,7 @@ angular.module('gymCompetitionApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', '
       views: {
         'content@': {
           templateUrl: 'views/clubdetails.html',
-          controller: 'ClubDetailController'/*,
-          resolve: {
-            club: ['$stateParams','clubFactory', function($stateParams, clubFactory){
-              return clubFactory.get({id:$stateParams.id});
-            }],
-            competitions: ['$stateParams','competitionFactory', function($stateParams, competitionFactory){
-              return competitionFactory.query({clubid:parseInt($stateParams.id, 10)});
-            }]
-          }*/
+          controller: 'ClubDetailController'
         }
       }
     })
