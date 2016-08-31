@@ -15,6 +15,9 @@
   </div>
   <cite>{{competition.location}}, {{competition.club}}</cite>
   <div ng-if="competition.editable">
+    <button type="button" class="btn btn-danger pull-right" ng-click="delete(competition._id)">
+      Delete
+    </button>
     <button type="button" class="btn btn-success pull-right" ui-sref="app.editcompetition({id: competition._id})">
       Edit Competition
     </button>

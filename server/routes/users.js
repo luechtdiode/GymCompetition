@@ -5,6 +5,7 @@ var User = require('../models/user');
 var Verify = require('./verify');
 var Club = require('../models/clubs');
 var Sponsor = require('../models/sponsors');
+var competitiones = require('../models/competitions');
 
 /* GET users listing. */
 router.route('/')
@@ -15,6 +16,23 @@ router.route('/')
       res.json(users);
     });
   });
+router.route('/:id').get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
+      console.log("find user with id " + req.params.id)
+      User.findById(req.params.id, function(err, user) {
+        if(err) next(err);
+        res.json(user);
+      });
+    })
+    .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
+      console.log("delete user with id " + req.params.id)
+      User.findByIdAndRemove(req.params.id, function(err, user) {
+        if(err) {
+          console.log(err);
+          next(err);
+        }
+        res.json(user);
+      });
+    });
 
   router.post('/register', function(req, res) {
     console.log("register: " + req.body);
@@ -221,5 +239,88 @@ router.get('/facebook/callback', function(req,res,next){
     });
   })(req,res,next);
 });
+
+router.cleanup = function() {
+  User.find({}, function(err, comps) {
+    if(err) {
+      console.log(err);
+      next(err);
+    }
+    for(var i in comps) {
+      if(!comps[i].isMemberOfClub && !comps[i].isMemberOfSponsor) {
+        console.log("deleting User: " + comps[i]);
+        User.remove({_id:comps[i]._id}, function(err){
+          console.log(err);
+        });
+        //User.findByIdAndRemove(comps[i]._id);
+      }
+      else if(comps[i].isMemberOfClub) {
+        Club.findById(comps[i].isMemberOfClub, function(err, clbs){
+          if(err || !clbs) {
+            console.log("deleting Club User: " + comps[i]);
+            User.remove({_id:comps[i]._id}, function(err){
+              console.log(err);
+            });
+          }
+        });
+      }
+      else if(comps[i].isMemberOfSponsor) {
+        Sponsor.findById(comps[i].isMemberOfSponsor, function(err, clbs){
+          if(err || !clbs) {
+            console.log("deleting Sponsor User: " + comps[i]);
+            User.remove({_id:comps[i]._id}, function(err){
+              console.log(err);
+            });
+          }
+        });
+      }
+    }
+
+    competitiones.find({}, function(err, comps) {
+      if(err) {
+        console.log(err);
+        next(err);
+      }
+      for(var i in comps) {
+        if(!comps[i].clubid) {
+          console.log("deleting competition1: " + comps[i]);
+          competitiones.findByIdAndRemove(comps[i]._id, function(err) {
+            console.log(err);
+          });
+        }
+        else {
+          Club.findById(comps[i].clubid, function(err, clbs){
+            if(err || !clbs) {
+              console.log("deleting competition2: " + comps[i]);
+              competitiones.findByIdAndRemove(comps[i]._id, function(err) {
+                console.log(err);
+              });
+            }
+          });
+        }
+      }
+      User.find({"admin": true}, function (err, adminusers) {
+          if (err || adminusers.length == 0) {
+            User.findOne(function (err, adminuser) {
+              console.log("setting adminuser on " + adminuser.username);
+              adminuser.admin = true;
+              User.findByIdAndUpdate(adminuser._id, {
+                  $set: adminuser
+              }, {
+                  new: true
+              }, function (err, competition) {
+                if (err) {
+                  console.log(err);
+                }
+              });
+            });
+          }
+      });
+
+    });
+
+  });
+};
+router.cleanup();
 
 module.exports = router;

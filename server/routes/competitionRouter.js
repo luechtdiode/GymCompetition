@@ -25,14 +25,13 @@ competitionRouter.route('/')
 .post(Verify.verifyOrdinaryUser, function (req, res, next) {
   console.log(req.body);
     competitiones.create(req.body, function (err, competition) {
-        if (err) throw err;
-        console.log('competition created!');
-        var id = competition._id;
-        res.writeHead(200, {
-            'Content-Type': 'text/plain'
-        });
-
-        res.end('Added the competition with id: ' + id);
+        if (err) {
+          next(err);
+        }
+        else {
+          console.log('competition created!');
+          res.json(competition);
+        }
     });
 })
 
@@ -104,7 +103,8 @@ competitionRouter.route('/:id')
     });
 })
 
-.delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
+.delete(Verify.verifyOrdinaryUser, function (req, res, next) {
+    console.log("deleting competition " + req.params.id);
         competitiones.findByIdAndRemove(req.params.id, function (err, resp) {
           if (err) {
             next(err);

@@ -81,5 +81,6 @@ var CompetitionSchema = new Schema({
 // we need to create a model using it
 var Competitions = mongoose.model('Competition', CompetitionSchema);
 
+
 // make this available to our Node applications
 module.exports = Competitions;

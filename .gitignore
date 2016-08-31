@@ -14,8 +14,8 @@ testdata
 /node_modules/*
 /dist/*
 /public/*
-/bin/*.pem
-/bin/*.key
+/server/bin/*.pem
+/server/bin/*.key
 
 .tmp
 *.log

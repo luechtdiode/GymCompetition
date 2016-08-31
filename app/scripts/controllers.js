@@ -119,10 +119,10 @@ angular.module('gymCompetitionApp')
                   regactions : []
                 };
                 for(var a in $scope.actions) {
-                  if($scope.actions[a].id !== undefined) {
+                  if($scope.actions[a]._id !== undefined) {
                     $scope.registration.regactions.push(
                       {
-                        action:$scope.actions[a].id,
+                        action:$scope.actions[a]._id,
                         name:$scope.actions[a].name,
                         selected:true,
                         bidperaction:10.0,
@@ -380,10 +380,12 @@ angular.module('gymCompetitionApp')
                   sponsoractions: $scope.competition.sponsoractions,
                   dates: $scope.competition.dates
                 }).$promise.then(function(wk){
-                  $state.go('wkapp', {id:wk.id});
+                  console.log("goto wkapp/wk_" + wk._id);
+                  $state.go('wkapp', {id:wk._id});
                 },
                 function(response) {
                     console.log("Error: "+response.status + " " + response.statusText);
+                    $state.go('app.competitions');
                 });
 
                 //ngDialog.close();
@@ -493,10 +495,11 @@ angular.module('gymCompetitionApp')
                   sponsoractions: $scope.competition.sponsoractions,
                   dates: $scope.competition.dates
                 }).$promise.then(function(wk){
-                  $state.go('wkapp', {id:wk.id});
+                  $state.go('app.competitions');
                 },
                 function(response) {
                     console.log("Error: "+response.status + " " + response.statusText);
+                    $state.go('app.competitions');
                 });
             };
         }])
@@ -550,21 +553,24 @@ angular.module('gymCompetitionApp')
             $scope.filtText = '';
             $scope.showCompetition = false;
             $scope.message = "Loading ...";
-
-            $scope.competitions = competitionFactory.getCompetitions().query(
-                function(response) {
-                    for(var i in response) {
-                      console.log(response[i]);
-                      if(response[i]._id !== undefined) {
-                        response[i].editable = authFactory.isMemberOfClub() > '-1' && authFactory.isMemberOfClub() === response[i].clubid._id;
+            var refresh = function() {
+              $scope.competitions = competitionFactory.getCompetitions().query(
+                  function(response) {
+                      for(var i in response) {
+                        console.log(response[i]);
+                        if(response[i]._id !== undefined) {
+                          response[i].editable = authFactory.isMemberOfClub() > '-1' && authFactory.isMemberOfClub() === response[i].clubid._id;
+                        }
                       }
-                    }
-                    $scope.competitions = response;
-                    $scope.showCompetition = true;
-                },
-                function(response) {
-                    $scope.message = "Error: "+response.status + " " + response.statusText;
-                });
+                      $scope.competitions = response;
+                      $scope.showCompetition = true;
+                  },
+                  function(response) {
+                      $scope.message = "Error: "+response.status + " " + response.statusText;
+                  });
+            }
+
+            refresh();
 
             $scope.select = function(setTab) {
                 $scope.tab = setTab;
@@ -582,7 +588,11 @@ angular.module('gymCompetitionApp')
                     $scope.filtText = "";
                 }
             };
-
+            $scope.delete = function(id) {
+              console.log("Deleting competition " + id);
+              competitionFactory.getCompetitions().delete({id: id});
+              refresh();
+            };
             $scope.cmpCompetition = function(actual, expected) {
               if(expected === "") {
                 return true;
@@ -615,20 +625,28 @@ angular.module('gymCompetitionApp')
             $scope.filtText = '';
             $scope.showClub = false;
             $scope.clubmessage = "Loading ...";
-
-            $scope.clubs = clubFactory.getClubs().query(
-                function(response) {
-                    for(var i in response) {
-                      if(response[i]._id !== undefined) {
-                        response[i].editable = authFactory.isMemberOfClub() > '-1' && authFactory.isMemberOfClub() === response[i]._id;
+            var refresh = function() {
+              $scope.clubs = clubFactory.getClubs().query(
+                  function(response) {
+                      for(var i in response) {
+                        if(response[i]._id !== undefined) {
+                          response[i].editable = authFactory.isMemberOfClub() > '-1' && authFactory.isMemberOfClub() === response[i]._id;
+                        }
                       }
-                    }
-                    $scope.clubs = response;
-                    $scope.showClub = true;
-                },
-                function(response) {
-                    $scope.clubmessage = "Error: "+response.status + " " + response.statusText;
-                });
+                      $scope.clubs = response;
+                      $scope.showClub = true;
+                  },
+                  function(response) {
+                      $scope.clubmessage = "Error: "+response.status + " " + response.statusText;
+                  });
+            };
+            refresh();
+            $scope.delete = function(id) {
+              console.log("Deleting competition " + id);
+              clubFactory.getClubs().delete({id: id});
+              refresh();
+              authFactory.logout();
+            };
 
             $scope.select = function(setTab) {
                 $scope.tab = setTab;
@@ -675,20 +693,29 @@ angular.module('gymCompetitionApp')
         .controller('SponsorsController', ['$scope', 'sponsorFactory', 'authFactory', function($scope, sponsorFactory, authFactory) {
             $scope.showSponsor = false;
             $scope.message = "Loading ...";
-            $scope.sponsors = sponsorFactory.getSponsors().query(
-                function(response) {
-                    for(var i in response) {
-                      console.log(response[i]);
-                      if(response[i]._id !== undefined) {
-                        response[i].editable = authFactory.isMemberOfSponsor() > '-1' && authFactory.isMemberOfSponsor() === response[i]._id;
+            var refresh = function() {
+              $scope.sponsors = sponsorFactory.getSponsors().query(
+                  function(response) {
+                      for(var i in response) {
+                        console.log(response[i]);
+                        if(response[i]._id !== undefined) {
+                          response[i].editable = authFactory.isMemberOfSponsor() > '-1' && authFactory.isMemberOfSponsor() === response[i]._id;
+                        }
                       }
-                    }
-                    $scope.sponsors = response;
-                    $scope.showSponsor = true;
-                },
-                function(response) {
-                    $scope.message = "Error: "+response.status + " " + response.statusText;
-                });
+                      $scope.sponsors = response;
+                      $scope.showSponsor = true;
+                  },
+                  function(response) {
+                      $scope.message = "Error: "+response.status + " " + response.statusText;
+                  });
+            };
+            refresh();
+            $scope.delete = function(sid) {
+              console.log("Deleting Sponsor " + sid);
+              sponsorFactory.getSponsors().delete({id: sid});
+              refresh();
+              authFactory.logout();
+            };
         }])
 
         .controller('ClubDetailController', ['$scope', '$stateParams', 'authFactory', 'clubFactory', 'competitionFactory',
@@ -707,6 +734,11 @@ angular.module('gymCompetitionApp')
                     $scope.clubmessage = "Error: "+response.status + " " + response.statusText;
                 }
             );
+            $scope.delete = function(sid) {
+              console.log("Deleting Club " + sid);
+              sponsorFactory.getClubs().delete({id: sid});
+              authFactory.logout();
+            };
             $scope.competitions = competitionFactory.getCompetitions().query({clubid:$stateParams.id},
                 function(response) {
                     for(var i in response) {
@@ -733,6 +765,11 @@ angular.module('gymCompetitionApp')
             console.log( authFactory.isMemberOfSponsor());
             $scope.isSponsorUser = authFactory.isMemberOfSponsor() === $stateParams.id;
             console.log($scope.isSponsorUser );
+            $scope.delete = function(sid) {
+              console.log("Deleting Sponsor " + sid);
+              sponsorFactory.getSponsors().delete({id: sid});
+              authFactory.logout();
+            };
             $scope.sponsor = sponsorFactory.getSponsors().get({id:$stateParams.id}).$promise.then(
                 function(response){
                     $scope.sponsor = response;

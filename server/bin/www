@@ -2,8 +2,8 @@
 /**
  * Module dependencies.
  */
-var app = require('../server/app');
-var config = require('../server/config');
+var app = require('../app');
+var config = require('../config');
 var debug = require('debug')('rest-server:server');
 var http = require('http');
 var https = require('https');

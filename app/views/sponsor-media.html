@@ -22,6 +22,9 @@
       <a href='{{sponsor.homepage}}' target='_blank'><cite title="Homepage">{{sponsor.homepage}}</cite></a></footer>
     </div>
     <div ng-if="sponsor.editable">
+      <button type="button" class="btn btn-danger pull-right" ng-click="delete(sponsor._id)">
+        Delete me
+      </button>
       <button type="button" class="btn btn-success pull-right" ui-sref="app.editsponsor({id: sponsor._id})">
         Edit Sponsor
       </button>

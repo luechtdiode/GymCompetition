@@ -2,6 +2,9 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     clubes = require('../models/clubs'),
+    users = require('../models/user'),
+    competitions = require('../models/competitions'),
+    cleanup = require('./users').cleanup,
     Verify = require('./verify');
 
 var clubRouter = express.Router();
@@ -28,12 +31,7 @@ clubRouter.route('/')
       }
       else {
         console.log('club created!');
-        var id = club._id;
-        res.writeHead(200, {
-            'Content-Type': 'text/plain'
-        });
-
-        res.end('Added the club with id: ' + id);
+        res.json(club);
       }
     });
 })
@@ -91,15 +89,20 @@ clubRouter.route('/:id')
     });
 })
 
-.delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
-    clubes.findByIdAndRemove(req.params.clubId, function (err, resp) {
+.delete(Verify.verifyOrdinaryUser, function (req, res, next) {
+  console.log("deleting club " + req.params.id);
+    clubes.findByIdAndRemove(req.params.id, function (err, resp) {
       if (err) {
+        console.log("error deleting club " + err);
         next(err);
       }
       else {
+        cleanup();
+        console.log("deleting club finished" + req.params.id);
         res.json(resp);
       }
     });
 });
+
 
 module.exports = clubRouter;

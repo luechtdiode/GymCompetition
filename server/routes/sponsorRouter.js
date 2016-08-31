@@ -2,6 +2,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     sponsores = require('../models/sponsors'),
+    cleanup = require('./users').cleanup,
     Verify = require('./verify');
 
 var sponsorRouter = express.Router();
@@ -58,9 +59,9 @@ sponsorRouter.route('/month')
     });
 });
 
-sponsorRouter.route('/:sponsorId')
+sponsorRouter.route('/:id')
 .get(function (req, res, next) {
-    sponsores.findById(req.params.sponsorId)
+    sponsores.findById(req.params.id)
         //.populate('action')
         .exec(function (err, sponsor) {
           if (err) {
@@ -73,7 +74,7 @@ sponsorRouter.route('/:sponsorId')
 })
 
 .put(Verify.verifyOrdinaryUser, function (req, res, next) {
-    sponsores.findByIdAndUpdate(req.params.sponsorId, {
+    sponsores.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, {
         new: true
@@ -87,15 +88,20 @@ sponsorRouter.route('/:sponsorId')
     });
 })
 
-.delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
-        sponsores.findByIdAndRemove(req.params.sponsorId, function (err, resp) {
-          if (err) {
-            next(err);
-          }
-          else {
-            res.json(resp);
-          }
+.delete(Verify.verifyOrdinaryUser, function (req, res, next) {
+  console.log("deleting sponsor " + req.params.id);
+    sponsores.findByIdAndRemove(req.params.id, function (err, resp) {
+      if (err) {
+        console.log("error deleting sponsor " + err);
+        next(err);
+      }
+      else {
+        cleanup();
+        console.log("deleting sponsor finished" + req.params.id);
+        res.json(resp);
+      }
     });
 });
+
 
 module.exports = sponsorRouter;
