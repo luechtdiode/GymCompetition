@@ -1,4 +1,5 @@
 # GymCompetition
+![product-logo](https://github.com/luechtdiode/GymCompetition/blob/master/app/images/logo.png)
 
 The App provides a platform for clubs, sponsors and public viewers. The clubs organize competitions and provide sponsoring-actions. The sponsors define their profil on wich sponsor-actions the want to bid some Money. Public viewer visit the Homepage of a competition, search for results and will be advertised by the sponsor-actions.
 
@@ -13,41 +14,45 @@ The App provides a platform for clubs, sponsors and public viewers. The clubs or
 * Consistent sponsoring strategy
 
 ## Expected List of Features
-The Application will be structured into a hosting-area, where clubs and sponsors can:
-1. register themselves
-2. administrate with authenticated/authorized functions (self service).
-and into a public area, which is provided per competition that gives access to the
-competition-homepages, provided by the clubs.
+The Application will be structured into a hosting-area, where clubs and sponsors can 
+a)
+
+  1. register themselves
+  2. administrate with authenticated/authorized functions (self service).
+
+and b) 
+
+  - into a public area, which is provided per competition that gives access to the competition-homepages, provided by the clubs.
 
 ### Club-Registration
-*Use case:* Register as new Gym-Club to provide some or anticipate on Gymnastic
+:white_check_mark: *Use case:* Register as new Gym-Club to provide some or anticipate on Gymnastic
 Competitions.
 #### Gym-Registration
-*Use case:* Register Gymnasts of the own club on Competitions instantiated/provided by other
+:white_check_mark: *Use case:* Register Gymnasts of the own club on Competitions instantiated/provided by other
 clubs.
 #### Competition-Instantiation
-*Use case:* Instantiate and plan a new Gym-Competition Event.
+:white_check_mark: *Use case:* Instantiate and plan a new Gym-Competition Event.
 
 ### Sponsor-Registration
-*Use case:* Register as new Sponsor to support Gymnastic Competitions with my Sponsoring-
-Strategy.
+:white_check_mark:*Use case:* Register as new Sponsor to support Gymnastic Competitions with "my Sponsoring-
+Strategy".
 #### Banner/Logo-Upload
-Let the sponsor provide promotion-materials like banner and logos.
+:construction_worker: *Use case:* Let the sponsor provide promotion-materials like banner and logos.
 #### Slogans/Homepage-Links
-Let the sponsor provide Slogans and Homepage-Links, which can be placed on the
+:white_check_mark: *Use case:* Let the sponsor provide Slogans and Homepage-Links, which can be placed on the
 Competition-Homepage or as printed Medium, distributed by the club.
 #### Activation-Rules
-Define when, where and which sponsoring-action should be applied.
+:white_check_mark: *Use case:* Define when, where and which sponsoring-action should be applied.
 
 ### Competition-Homepage
 Public provided Competition-Homepage per instantiated Competition.
-* Landing-Page
-* Program
-* Location
-* Sponsors
-* Clubs
+* Landing-Page :white_check_mark:
+* Program :construction_worker:
+* Location :construction_worker:
+* Sponsors :white_check_mark:
+* Clubs :white_check_mark:
 * Score-Lists
-* Social-Media
+* Social-Media :construction_worker:
 
 ## References, Alternatives (Market-Survey)
 
