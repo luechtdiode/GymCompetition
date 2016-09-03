@@ -4,7 +4,7 @@
 - :arrow_down: ![Download Android-App](https://github.com/luechtdiode/GymCompetition/blob/master/mobile/dist/android-debug.apk)
 - :link: [Launch Web App](https://gymcompetition.mybluemix.net/)
 
-The App provides a platform for clubs, sponsors and public viewers. The clubs organize competitions and provide sponsoring-actions. The sponsors define their profil on wich sponsor-actions the want to bid some Money. Public viewer visit the Homepage of a competition, search for results and will be advertised by the sponsor-actions.
+The App provides a platform for clubs, sponsors and public viewers. The clubs organize competitions and provide sponsoring-actions. The sponsors define their profile on which sponsor-actions the want to bid some money. Public viewer visit the homepage of a competition, search for results and will be advertised by the sponsor-actions.
 
 ## Goals
 * Bring Gym-Community together with sponsoring and publicity
@@ -18,15 +18,14 @@ The App provides a platform for clubs, sponsors and public viewers. The clubs or
 * Consistent sponsoring strategy
 
 ## Expected List of Features
-The Application will be structured into a hosting-area, where clubs and sponsors can 
-a)
+The Application will be structured 
 
+a) **into a hosting-area**, where clubs and sponsors can
+  
   1. register themselves
   2. administrate with authenticated/authorized functions (self service).
 
-and b) 
-
-  - into a public area, which is provided per competition that gives access to the competition-homepages, provided by the clubs.
+and b) **into a public area**, which is provided per competition that gives access to the competition-homepages, provided by the clubs. 
 
 ### Club-Registration
 :white_check_mark: *Use case:* Register as new Gym-Club to provide some or anticipate on Gymnastic
