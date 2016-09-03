@@ -32,7 +32,7 @@ and b) **into a public area**, which is provided per competition that gives acce
 Competitions.
 
 #### Gym-Registration
-:white_check_mark: *Use case:* Register Gymnasts of the own club on Competitions instantiated/provided by other
+:construction_worker: *Use case:* Register Gymnasts of the own club on Competitions instantiated/provided by other
 clubs.
 
 #### Competition-Instantiation
