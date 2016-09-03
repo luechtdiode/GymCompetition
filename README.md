@@ -1,6 +1,9 @@
 # GymCompetition
 ![product-logo](https://github.com/luechtdiode/GymCompetition/blob/master/app/images/logo.png)
 
+- :arrow_down: ![Download Android-App](https://github.com/luechtdiode/GymCompetition/blob/master/mobile/dist/android-debug.apk)
+- :link: ![Launch Web App](https://gymcompetition.mybluemix.net/#/)
+
 The App provides a platform for clubs, sponsors and public viewers. The clubs organize competitions and provide sponsoring-actions. The sponsors define their profil on wich sponsor-actions the want to bid some Money. Public viewer visit the Homepage of a competition, search for results and will be advertised by the sponsor-actions.
 
 ## Goals
@@ -34,7 +37,7 @@ clubs.
 :white_check_mark: *Use case:* Instantiate and plan a new Gym-Competition Event.
 
 ### Sponsor-Registration
-:white_check_mark:*Use case:* Register as new Sponsor to support Gymnastic Competitions with "my Sponsoring-
+:white_check_mark: *Use case:* Register as new Sponsor to support Gymnastic Competitions with "my Sponsoring-
 Strategy".
 #### Banner/Logo-Upload
 :construction_worker: *Use case:* Let the sponsor provide promotion-materials like banner and logos.
@@ -51,7 +54,7 @@ Public provided Competition-Homepage per instantiated Competition.
 * Location :construction_worker:
 * Sponsors :white_check_mark:
 * Clubs :white_check_mark:
-* Score-Lists
+* Score-Lists :construction_worker:
 * Social-Media :construction_worker:
 
 ## References, Alternatives (Market-Survey)
