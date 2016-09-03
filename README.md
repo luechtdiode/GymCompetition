@@ -2,7 +2,7 @@
 ![product-logo](https://github.com/luechtdiode/GymCompetition/blob/master/app/images/logo.png)
 
 - :arrow_down: ![Download Android-App](https://github.com/luechtdiode/GymCompetition/blob/master/mobile/dist/android-debug.apk)
-- :link: ![Launch Web App](https://gymcompetition.mybluemix.net/#/)
+- :link: [Launch Web App](https://gymcompetition.mybluemix.net/)
 
 The App provides a platform for clubs, sponsors and public viewers. The clubs organize competitions and provide sponsoring-actions. The sponsors define their profil on wich sponsor-actions the want to bid some Money. Public viewer visit the Homepage of a competition, search for results and will be advertised by the sponsor-actions.
 
