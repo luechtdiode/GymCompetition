@@ -141,4 +141,38 @@ angular.module('gymCompetitionApp')
       }
     };
   }])
+
+  .factory('budgetCalculator', [function() {
+    var calc = {};
+    calc.recalculateBudget = function(registration) {
+      console.log("calculating  sponsor-budget ..");
+      registration.budget = 0;
+      for(var i in registration.regactions) {
+        var action = registration.regactions[i];
+        if(action.selected) {
+          var maxcost = action.bidperaction * action.maxcnt;
+          registration.budget += maxcost;
+        }
+      }
+      return registration.budget;
+    };
+    return calc;
+  }])
+
+  .factory('competitionBudgetCalculator', [function() {
+    var calc = {};
+    calc.recalculateBudget = function(competition) {
+      console.log("calculating competition-budget ..");
+      competition.budget = 0;
+      for(var i in competition.sponsoractions) {
+        var action = competition.sponsoractions[i];
+        if(action.selected) {
+          var maxcost = action.costperaction * action.maxcnt;
+          competition.budget += maxcost;
+        }
+      }
+      return competition.budget;
+    };
+    return calc;
+  }])
 ;

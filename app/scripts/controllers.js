@@ -87,19 +87,8 @@ angular.module('gymCompetitionApp')
 
         }])
 
-        .controller('RegisterController', ['$scope', '$state', '$localStorage', 'authFactory', 'actionsFactory', function ($scope, $state, $localStorage, authFactory, actionsFactory) {
-          $scope.recalculateBudget = function() {
-            $scope.registration.budget = 0;
-            for(var i in $scope.registration.regactions) {
-              var action = $scope.registration.regactions[i];
-              if(action.selected) {
-                var maxcost = action.bidperaction * action.maxcnt;
-                $scope.registration.budget += maxcost;
-              }
-            }
-            return $scope.registration.budget;
-          };
-
+        .controller('RegisterController', ['$scope', '$state', '$localStorage', 'authFactory', 'actionsFactory', 'budgetCalculator',
+          function ($scope, $state, $localStorage, authFactory, actionsFactory, budgetCalculator) {
             $scope.actions = actionsFactory.getActions().query(
               function(success) {
                 $scope.actions = success;
@@ -131,7 +120,7 @@ angular.module('gymCompetitionApp')
                       });
                   }
                 }
-                $scope.recalculateBudget();
+                budgetCalculator.recalculateBudget($scope.registration);
               },
               function(response) {
                   console.log("Error: "+response.status + " " + response.statusText);
@@ -143,19 +132,12 @@ angular.module('gymCompetitionApp')
             };
         }])
 
-        .controller('SponsorController', ['$scope', '$state', '$localStorage', 'authFactory', 'actionsFactory', 'sponsorFactory',
-          function ($scope, $state, $localStorage, authFactory, actionsFactory, sponsorFactory) {
+        .controller('SponsorController', ['$scope', '$state', '$localStorage', 'authFactory', 'actionsFactory', 'sponsorFactory', 'budgetCalculator',
+          function ($scope, $state, $localStorage, authFactory, actionsFactory, sponsorFactory, budgetCalculator) {
             $scope.recalculateBudget = function() {
-              $scope.registration.budget = 0;
-              for(var i in $scope.registration.regactions) {
-                var action = $scope.registration.regactions[i];
-                if(action.selected) {
-                  var maxcost = action.bidperaction * action.maxcnt;
-                  $scope.registration.budget += maxcost;
-                }
-              }
-              return $scope.registration.budget;
+              budgetCalculator.recalculateBudget($scope.registration);
             };
+
             //angular.bind(self, fn, args);
             $scope.actions = actionsFactory.getActions().query(
               function(success) {
@@ -215,7 +197,7 @@ angular.module('gymCompetitionApp')
                         }
                       }
                     }
-                    $scope.recalculateBudget();
+                    budgetCalculator.recalculateBudget($scope.registration);
                   },
                   function(response) {
                       console.log("Error: "+response.status + " " + response.statusText);
@@ -292,20 +274,11 @@ angular.module('gymCompetitionApp')
           };
         }])
 
-        .controller('CreateCompetitionController', ['$scope', '$stateParams', '$state', 'competitionFactory', 'clubFactory', 'authFactory', 'actionsFactory',
-        function ($scope, $stateParams, $state, competitionFactory, clubFactory, authFactory, actionsFactory) {
+        .controller('CreateCompetitionController', ['$scope', '$stateParams', '$state', 'competitionFactory', 'clubFactory', 'authFactory', 'actionsFactory', 'competitionBudgetCalculator',
+        function ($scope, $stateParams, $state, competitionFactory, clubFactory, authFactory, actionsFactory, competitionBudgetCalculator) {
           $scope.recalculateBudget = function() {
-            $scope.competition.budget = 0;
-            for(var i in $scope.competition.sponsoractions) {
-              var action = $scope.competition.sponsoractions[i];
-              if(action.selected) {
-                var maxcost = action.costperaction * action.maxcnt;
-                $scope.competition.budget += maxcost;
-              }
-            }
-            return $scope.competition.budget;
+            competitionBudgetCalculator.recalculateBudget($scope.competition);
           };
-
           clubFactory.getClubs().get({id:$stateParams.id}).$promise.then(
             function(club){
               $scope.club = club;
@@ -337,7 +310,7 @@ angular.module('gymCompetitionApp')
                         });
                     }
                   }
-                  $scope.recalculateBudget();
+                  competitionBudgetCalculator.recalculateBudget($scope.competition);
                 },
                 function(response) {
                     console.log("Error: "+response.status + " " + response.statusText);
@@ -393,18 +366,10 @@ angular.module('gymCompetitionApp')
             };
         }])
 
-        .controller('EditCompetitionController', ['$scope', '$stateParams', '$state', 'competitionFactory', 'clubFactory', 'authFactory', 'actionsFactory',
-        function ($scope, $stateParams, $state, competitionFactory, clubFactory, authFactory, actionsFactory) {
+        .controller('EditCompetitionController', ['$scope', '$stateParams', '$state', 'competitionFactory', 'clubFactory', 'authFactory', 'actionsFactory', 'competitionBudgetCalculator',
+        function ($scope, $stateParams, $state, competitionFactory, clubFactory, authFactory, actionsFactory, competitionBudgetCalculator) {
           $scope.recalculateBudget = function() {
-            $scope.competition.budget = 0;
-            for(var i in $scope.competition.sponsoractions) {
-              var action = $scope.competition.sponsoractions[i];
-              if(action.selected) {
-                var maxcost = action.costperaction * action.maxcnt;
-                $scope.competition.budget += maxcost;
-              }
-            }
-            return $scope.competition.budget;
+            competitionBudgetCalculator.recalculateBudget($scope.competition);
           };
 
           competitionFactory.getCompetitions().get({id:$stateParams.id}).$promise.then(
@@ -452,7 +417,7 @@ angular.module('gymCompetitionApp')
                     }
                   }
                   $scope.competition.sponsoractions = saMaterialized;
-                  $scope.recalculateBudget();
+                  competitionBudgetCalculator.recalculateBudget($scope.competition);
                 },
                 function(response) {
                     console.log("Error: "+response.status + " " + response.statusText);
@@ -494,7 +459,7 @@ angular.module('gymCompetitionApp')
                   budget: $scope.competition.budget,
                   sponsoractions: $scope.competition.sponsoractions,
                   dates: $scope.competition.dates
-                }).$promise.then(function(wk){
+                }).$promise.then(function(){
                   $state.go('app.competitions');
                 },
                 function(response) {
@@ -568,7 +533,7 @@ angular.module('gymCompetitionApp')
                   function(response) {
                       $scope.message = "Error: "+response.status + " " + response.statusText;
                   });
-            }
+            };
 
             refresh();
 
@@ -736,7 +701,7 @@ angular.module('gymCompetitionApp')
             );
             $scope.delete = function(sid) {
               console.log("Deleting Club " + sid);
-              sponsorFactory.getClubs().delete({id: sid});
+              clubFactory.getClubs().delete({id: sid});
               authFactory.logout();
             };
             $scope.competitions = competitionFactory.getCompetitions().query({clubid:$stateParams.id},
