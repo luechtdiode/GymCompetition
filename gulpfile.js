@@ -3,7 +3,9 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
     uglify = require('gulp-uglify'),
-    usemin = require('gulp-usemin'),
+    useref = require('gulp-useref'),
+    gulpif = require('gulp-if'),
+    minifyCss = require('gulp-clean-css'),
     imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
@@ -33,11 +35,10 @@ gulp.task('default', ['clean'], function() {
 
 gulp.task('usemin',['jshint'], function () {
   return gulp.src('./app/**/*.html')
-      .pipe(usemin({
-        css:[minifycss(),rev()]/*,
-        js: [ngannotate(),uglify(),rev()]*/
-      }))
-      .pipe(gulp.dest('public/'));
+    .pipe(useref())
+    .pipe(gulpif('*.js', uglify()))
+    .pipe(gulpif('*.css', minifyCss()))
+    .pipe(gulp.dest('public/'));
 });
 
 // Images
