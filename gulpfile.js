@@ -36,7 +36,7 @@ gulp.task('default', ['clean'], function() {
 gulp.task('usemin',['jshint'], function () {
   return gulp.src('./app/**/*.html')
     .pipe(useref())
-    .pipe(gulpif('*.js', uglify()))
+    //.pipe(gulpif('*.js', uglify()))
     .pipe(gulpif('*.css', minifyCss()))
     .pipe(gulp.dest('public/'));
 });
