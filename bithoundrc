@@ -50,6 +50,8 @@
   ],
   "dependencies": {
     "mute": [
+      "gulp",
+      "browser-sync",
       "shrinkwrap",
       "@types/**",
       "typescript"
