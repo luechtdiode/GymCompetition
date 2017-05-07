@@ -2245,9 +2245,9 @@
       "dev": true
     },
     "gulp-clean-css": {
-      "version": "3.0.4",
-      "from": "gulp-clean-css@3.0.4",
-      "resolved": "https://registry.npmjs.org/gulp-clean-css/-/gulp-clean-css-3.0.4.tgz",
+      "version": "3.1.0",
+      "from": "gulp-clean-css@3.1.0",
+      "resolved": "https://registry.npmjs.org/gulp-clean-css/-/gulp-clean-css-3.1.0.tgz",
       "dev": true
     },
     "gulp-concat": {
@@ -3752,9 +3752,9 @@
       "resolved": "https://registry.npmjs.org/mongodb-core/-/mongodb-core-2.1.10.tgz"
     },
     "mongoose": {
-      "version": "4.9.7",
-      "from": "mongoose@4.9.7",
-      "resolved": "https://registry.npmjs.org/mongoose/-/mongoose-4.9.7.tgz"
+      "version": "4.9.8",
+      "from": "mongoose@4.9.8",
+      "resolved": "https://registry.npmjs.org/mongoose/-/mongoose-4.9.8.tgz"
     },
     "mongoose-currency": {
       "version": "0.2.0",
@@ -4135,26 +4135,6 @@
       "from": "passport-facebook@>=2.1.0 <2.2.0",
       "resolved": "https://registry.npmjs.org/passport-facebook/-/passport-facebook-2.1.1.tgz"
     },
-    "passport-google-oauth": {
-      "version": "1.0.0",
-      "from": "passport-google-oauth@1.0.0",
-      "resolved": "https://registry.npmjs.org/passport-google-oauth/-/passport-google-oauth-1.0.0.tgz"
-    },
-    "passport-google-oauth1": {
-      "version": "1.0.0",
-      "from": "passport-google-oauth1@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/passport-google-oauth1/-/passport-google-oauth1-1.0.0.tgz"
-    },
-    "passport-google-oauth20": {
-      "version": "1.0.0",
-      "from": "passport-google-oauth20@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/passport-google-oauth20/-/passport-google-oauth20-1.0.0.tgz"
-    },
-    "passport-instagram": {
-      "version": "1.0.0",
-      "from": "passport-instagram@1.0.0",
-      "resolved": "https://registry.npmjs.org/passport-instagram/-/passport-instagram-1.0.0.tgz"
-    },
     "passport-local": {
       "version": "1.0.0",
       "from": "passport-local@1.0.0",
@@ -4171,11 +4151,6 @@
           "resolved": "https://registry.npmjs.org/semver/-/semver-5.3.0.tgz"
         }
       }
-    },
-    "passport-oauth1": {
-      "version": "1.1.0",
-      "from": "passport-oauth1@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/passport-oauth1/-/passport-oauth1-1.1.0.tgz"
     },
     "passport-oauth2": {
       "version": "1.4.0",
