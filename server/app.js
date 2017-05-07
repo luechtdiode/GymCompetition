@@ -54,7 +54,7 @@ db.once('open', function () {
 db.on('disconnected', function() {
   console.log('disconnected');
   console.log('dbURI is: '+conn_str);
-  mongoose.connect(conn_str, mongooseConfig);
+  // mongoose.connect(conn_str, mongooseConfig);
 });
 mongoose.connect(conn_str, mongooseConfig);
 
