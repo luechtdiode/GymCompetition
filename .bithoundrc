@@ -1,5 +1,6 @@
 {
   "ignore": [
+    "**/mobile/www/lib/**",
     "**/deps/**",
     "**/node_modules/**",
     "**/thirdparty/**",
