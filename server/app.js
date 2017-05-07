@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var authenticate = require('./authenticate');
 var config = require('./config');
+var bluebird = require('bluebird');
 
 var mongo = process.env.VCAP_SERVICES;
 var port = process.env.PORT || 3030;
@@ -27,7 +28,23 @@ if (mongo) {
 } else {
   conn_str = config.mongoUrl;
 }
-
+var mongooseConfig = {
+    server:{
+      auto_reconnect:true,
+      socketOptions: {
+        keepAlive: 1,
+        connectTimeoutMS: 30000 
+      }
+    },
+    replset: {
+      socketOptions: {
+        keepAlive: 1,
+        connectTimeoutMS : 30000
+      }
+    },
+    promiseLibrary: bluebird
+  };
+mongoose.Promise = bluebird;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -37,21 +54,9 @@ db.once('open', function () {
 db.on('disconnected', function() {
   console.log('disconnected');
   console.log('dbURI is: '+conn_str);
-  mongoose.connect(conn_str, {
-    server:{
-      auto_reconnect:true,
-      socketOptions: {
-        keepAlive: 1,
-        connectTimeoutMS: 30000 }
-      },
-      replset: {
-        socketOptions: {
-          keepAlive: 1,
-          connectTimeoutMS : 30000
-        }
-      }});
+  mongoose.connect(conn_str, mongooseConfig);
 });
-mongoose.connect(conn_str, {server:{auto_reconnect:true}});
+mongoose.connect(conn_str, mongooseConfig);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
