@@ -6,5 +6,3 @@ applications:
   host: gymcompetition
   disk_quota: 1024M
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
-services:
-- mongodb8
