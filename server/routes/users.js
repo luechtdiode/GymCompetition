@@ -301,17 +301,21 @@ router.cleanup = () => {
       User.find({"admin": true}, (err, adminusers) => {
           if (err || adminusers.length == 0) {
             User.findOne((err, adminuser) => {
-              console.log("setting adminuser on " + adminuser.username);
-              adminuser.admin = true;
-              User.findByIdAndUpdate(adminuser._id, {
-                  $set: adminuser
-              }, {
-                  new: true
-              }, (err, user) => {
-                if (err) {
-                  console.log(err);
-                }
-              });
+              if (adminuser) {
+                console.log("setting adminuser on " + adminuser.username);
+                adminuser.admin = true;
+                User.findByIdAndUpdate(adminuser._id, {
+                    $set: adminuser
+                }, {
+                    new: true
+                }, (err, user) => {
+                  if (err) {
+                    console.log(err);
+                  }
+                });
+              } else {
+                console.log("no users found -> no admin-user set");
+              }
             });
           } else  {
             for (admin of adminusers) {

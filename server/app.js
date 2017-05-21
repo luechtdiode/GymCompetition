@@ -14,6 +14,7 @@ var mongo = process.env.VCAP_SERVICES;
 var port = process.env.PORT || 3030;
 var conn_str = "";
 if (mongo) {
+  console.log("mongo found");
   var env = JSON.parse(mongo);
   if (env['mongodb']) {
     mongo = env['mongodb'][0]['credentials'];
