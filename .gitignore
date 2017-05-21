@@ -4,6 +4,7 @@ dist
 public
 schemaprototypes
 testdata
+login*
 
 */bower_components
 */node_modules
