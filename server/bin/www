@@ -52,7 +52,7 @@ try {
 }
 catch(err) {
     console.log(err);
-    console.log('guessing now - run on mbx ...');
+    console.log('guessing now - run on bmx ...');
     app.set('secPort', port);
     config.devmode = false;
 }

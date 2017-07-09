@@ -1,6 +1,6 @@
 module.exports = {
     'secretKey': '12345-67890-09876-54321',
-    'mongoUrl' : 'mongodb://localhost:27017/gymcompetition',
+    'mongoUrl' : 'mongodb://0.0.0.0:27017/gymcompetition',
     'devmode': true,
     'facebook': {
         clientID: '1380585175300499',
