@@ -39,7 +39,7 @@ router.route('/:id').get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, re
       User.register(new User({ username : req.body.username }),
           req.body.password, (err, user) => {
           if (err) {
-            //return res.status(500).json({err: err});
+            return res.status(500).json({err: err});
           }
           if(req.body.firstname) {
             user.firstname = req.body.firstname;

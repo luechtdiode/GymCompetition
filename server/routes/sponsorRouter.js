@@ -49,12 +49,12 @@ sponsorRouter.route('/')
 sponsorRouter.route('/month')
 .get(function (req, res, next) {
     sponsores.findOne()
-        .exec(function (err, competition) {
+        .exec(function (err, sponsor) {
           if (err) {
             next(err);
           }
           else {
-            res.json(competition);
+            res.json(sponsor);
           }
     });
 });
