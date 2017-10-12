@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require("express-session");
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -6,9 +7,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var authenticate = require('./authenticate');
+var authlocal = require('./auth/auth-local');
+var authfacebook = require('./auth/auth-facebook');
 var config = require('./config');
 var bluebird = require('bluebird');
+var cors = require('cors');
 
 var mongo = process.env.VCAP_SERVICES;
 var port = process.env.PORT || 3030;
@@ -59,12 +62,6 @@ db.on('disconnected', function() {
 });
 mongoose.connect(conn_str, mongooseConfig);
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var clubRouter = require('./routes/clubRouter');
-var sponsorRouter = require('./routes/sponsorRouter');
-var competitionRouter = require('./routes/competitionRouter');
-var actionRouter = require('./routes/actionRouter');
 var app = express();
 
 // view engine setup
@@ -104,18 +101,29 @@ app.all('*', function(req, res, next){
 
 // passport config
 var User = require('./models/user');
+app.use(session({ secret: config.secretKey })); // express-session
 app.use(passport.initialize());
+app.use(passport.session());
+app.use(cors({  
+  origin: '*',
+  withCredentials: false,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin' ]
+}));
+// app.use((_req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//   );
+//   next();
+// });
 
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/api/', express.static(path.join(__dirname, '../public')));
 
+const routes = require('./routes/index').init(app);
 app.use('/', routes);
 app.use('/api/', routes);
-app.use('/api/users', users);
-app.use('/api/clubs', clubRouter);
-app.use('/api/sponsors', sponsorRouter);
-app.use('/api/competitions', competitionRouter);
-app.use('/api/actions', actionRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

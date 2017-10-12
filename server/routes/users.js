@@ -1,14 +1,14 @@
 var express = require('express');
-var router = express.Router();
-var passport = require('passport');
+var usersRouter = express.Router();
 var User = require('../models/user');
 var Verify = require('./verify');
+var doLogin = require('./login');
 var Club = require('../models/clubs');
 var Sponsor = require('../models/sponsors');
 var competitiones = require('../models/competitions');
 
 /* GET users listing. */
-router.route('/')
+usersRouter.route('/')
   // Task 3: Only admins are allowed to request the list of users
   .get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
     User.find({}, (err, users) => {
@@ -16,230 +16,40 @@ router.route('/')
       res.json(users);
     });
   });
-router.route('/:id').get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
-      console.log("find user with id " + req.params.id)
-      User.findById(req.params.id, (err, user) => {
+usersRouter.route('/profile')
+  .get(Verify.verifyOrdinaryUser, (req, res, next) => {
+    User.findById(req.decoded.id, (err, user) => {
+      if(err) next(err);
+      Sponsor.findById(user.isMemberOfSponsor, (err, sponsor) => {
         if(err) next(err);
-        res.json(user);
-      });
-    })
-    .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
-      console.log("delete user with id " + req.params.id)
-      User.findByIdAndRemove(req.params.id, (err, user) => {
-        if(err) {
-          console.log(err);
-          next(err);
-        }
-        res.json(user);
-      });
-    });
-
-  router.post('/register', (req, res) => {
-    console.log("register: " + req.body);
-      User.register(new User({ username : req.body.username }),
-          req.body.password, (err, user) => {
-          if (err) {
-            return res.status(500).json({err: err});
-          }
-          if(req.body.firstname) {
-            user.firstname = req.body.firstname;
-          }
-          if(req.body.lastname) {
-            user.lastname = req.body.lastname;
-          }
-          if(req.body.company) {
-            console.log("register company: " + req.body.company);
-            Sponsor.find({name: req.body.company}, (err, sponsors) => {
-              if(err) {
-                console.log(err);
-                return res.status(500).json({err: err});
-              }
-              if(sponsors.length == 0) {
-                var filteredSponsorActions = req.body.regactions.filter((action)=>{return action.selected;});
-                for(var i in filteredSponsorActions) {
-                  filteredSponsorActions[i] = {
-                    action:filteredSponsorActions[i].action,
-                    bidperaction:filteredSponsorActions[i].bidperaction,
-                    maxcnt:filteredSponsorActions[i].maxcnt,
-                    kinds:filteredSponsorActions[i].kinds.split(',').filter((action)=>{return action.length > 0;})
-                  };
-                }
-                console.log("create Sponsor with filteredActions: " + filteredSponsorActions);
-                Sponsor.create(new Sponsor({
-                  name: req.body.company,
-                  homepage:req.body.homepage,
-                  googleplushandle: req.body.googleplushandle,
-                  facebookhandle: req.body.facebookhandle,
-                  twitterhandle: req.body.twitterhandle,
-                  youtubehandle: req.body.youtubehandle,
-                  slogan:req.body.slogan,
-                  image: req.body.image,
-                  sponsoractions: filteredSponsorActions
-                }), (err, sponsor) => {
-                  if(err) {
-                    console.log(err);
-                    return res.status(500).json({err: err});
-                  }
-                  console.log("Sponsor created");
-                  user.isMemberOfSponsor = sponsor.id;
-                  user.save((err,user) => {
-                    if(err) {
-                      console.log(err);
-                      return res.status(500).json({err: err});
-                    }
-                    console.log("Sponsor-User created");
-                    passport.authenticate('local')(req, res, () => {
-                      console.log("Sponsor-User authenticated");
-                      return res.status(200).json({status: 'Registration Successful!'});
-                    });
-                  });
-                });
-              }
-              else {
-                return res.status(401).json({status: 'Registration not Successfuly: Sponsor allready exists!'});
-              }
-            });
-          }
-          else {
-            console.log("register club: " + req.body.name);
-            Club.find({name: req.body.name}, (err, clubs) => {
-              if(err) {
-                console.log(err);
-                return res.status(500).json({err: err});
-              }
-              if(clubs.length == 0) {
-                Club.create(new Club({
-                  name: req.body.name,
-                  //homepage:req.body.homepage,
-                  image: req.body.image,
-                  label: req.body.label,
-                  kind: req.body.kind.split(","),
-                  googleplushandle: req.body.googleplushandle,
-                  facebookhandle: req.body.facebookhandle,
-                  twitterhandle: req.body.twitterhandle,
-                  youtubehandle: req.body.youtubehandle,
-                  description: req.body.description
-                }), (err, club) => {
-                  if(err) {
-                    console.log(err);
-                    return res.status(500).json({err: err});
-                  }
-                  console.log("Club created");
-                  user.isMemberOfClub = club.id;
-                  user.save((err,user) => {
-                    console.log("Club-User created");
-                    if(err) {
-                      console.log(err);
-                      return res.status(500).json({err: err});
-                    }
-                    passport.authenticate('local')(req, res, () => {
-                      console.log("Club-User authenticated");
-                      return res.status(200).json({status: 'Registration Successful!'});
-                    });
-                  });
-                });
-              }
-              else {
-                return res.status(401).json({status: 'Registration not Successfuly: Club allready exists!'});
-              }
-            });
-          }
-          });
-      });
-  //});
-
-  // locally --------------------------------
-  /*
-router.get('/connect/local', (req, res) => {
-      res.render('connect-local.ejs', { message: req.flash('loginMessage') });
-    });
-router.post('/connect/local', passport.authenticate('local-signup', {
-      successRedirect : '/profile', // redirect to the secure profile section
-      failureRedirect : '/connect/local', // redirect back to the signup page if there is an error
-      failureFlash : true // allow flash messages
-    }));
-*/
-  // facebook -------------------------------
-
-    // send to facebook to do the authentication
-router.get('/connect/facebook', passport.authorize('facebook', { scope : 'email' }));
-
-    // handle the callback after facebook has authorized the user
-router.get('/connect/facebook/callback',
-      passport.authorize('facebook', {
-        successRedirect : '/profile',
-        failureRedirect : '/'
-      }));
-
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).json({
-        err: info
-      });
-    }
-    req.logIn(user, (err) => {
-      if (err) {
-        return res.status(500).json({
-          err: 'Could not log in user'
+        Club.findById(user.isMemberOfClub, (err, club) => {
+          if(err) next(err);
+          // user.token = req.session.jwtToken;
+          res.json({token: req.session.jwtToken, user: user, club: club, sponsor: sponsor});        
         });
-      }
-
-      var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
-      res.status(200).json({
-        status: 'Login successful!',
-        success: true,
-        token: token,
-        username: user.username,
-        isMemberOfSponsor: user.isMemberOfSponsor,
-        isMemberOfClub: user.isMemberOfClub
       });
     });
-  })(req,res,next);
-});
-
-router.get('/logout', (req, res) => {
-  req.logout();
-  res.status(200).json({
-    status: 'Bye!'
   });
-});
-
-router.get('/facebook', passport.authenticate('facebook'), (req, res) => {});
-
-router.get('/facebook/callback', (req,res,next) => {
-  passport.authenticate('facebook', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).json({
-        err: info
-      });
-    }
-    req.logIn(user, (err) => {
-      if (err) {
-        return res.status(500).json({
-          err: 'Could not log in user'
-        });
-      }
-      var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
-      res.status(200).json({
-        status: 'Login successful!',
-        success: true,
-        token: token,
-        username: user.username,
-        isMemberOfSponsor: user.isMemberOfSponsor,
-        isMemberOfClub: user.isMemberOfClub
-      });
+usersRouter.route('/:id')
+  .get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
+    console.log("find user with id " + req.params.id)
+    User.findById(req.params.id, (err, user) => {
+      if(err) next(err);
+      res.json(user);
     });
-  })(req,res,next);
-});
+  })
+  .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
+    console.log("delete user with id " + req.params.id)
+    User.findByIdAndRemove(req.params.id, (err, user) => {
+      if(err) {
+        console.log(err);
+        next(err);
+      }
+      res.json(user);
+    });
+  });
 
-router.cleanup = () => {
+usersRouter.cleanup = () => {
   User.find({}, (err, comps) => {
     if(err) {
       console.log(err);
@@ -328,6 +138,6 @@ router.cleanup = () => {
 
   });
 };
-router.cleanup();
+usersRouter.cleanup();
 
-module.exports = router;
+module.exports = usersRouter;

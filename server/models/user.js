@@ -1,37 +1,51 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');
+// var bcrypt = require('bcrypt');
 require('mongoose-currency').loadType(mongoose);
 var Currency = mongoose.Types.Currency;
 
-var RegactionsSchema = new Schema({
-  action: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Action'
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  selected:   {
-      type: Boolean,
-      default: false
-  },
-  bidperaction:   {
-      type: Currency,
-      default: 10
-  },
-  maxcnt:   {
-      type: Number,
-      default: 100
-  }
-});
-
 var User = new Schema({
-    username: String,
-    password: String,
-    OauthId: String,
-    OauthToken: String,
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true
+    },
+    verifytoken: String,
+    verified: Boolean,
+    provider: String,
+    facebook         : {
+        id           : String,
+        token        : String,
+        email        : String,
+        displayName  : String,
+        photourls    : [String]
+    },
+    twitter          : {
+        id           : String,
+        token        : String,
+        email        : String,
+        displayName  : String,
+        photourls    : [String]
+    },
+    google           : {
+        id           : String,
+        token        : String,
+        email        : String,
+        displayName  : String,
+        photourls    : [String]
+    },
     firstname: {
       type: String,
       default: ''
@@ -44,19 +58,7 @@ var User = new Schema({
         type: Boolean,
         default: false
     },
-    company: {
-      type: String,
-      default: ''
-    },
-    slogan: {
-      type: String,
-      default: ''
-    },
-    rememberMe: {
-      type: Boolean,
-      default: false
-    },
-    isMemberOfSponsor: {
+    isMemberOfSponsors: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Sponsor',
       required: false
@@ -65,14 +67,24 @@ var User = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Club',
       required: false
-    },
-    regactions: [RegactionsSchema]
+    }
   }
 );
 
 User.methods.getName = function() {
     return (this.firstname + ' ' + this.lastname);
 };
+
+// User.pre('save', function (next) {
+//   var user = this;
+//   bcrypt.hash(user.password, 10, function (err, hash){
+//     if (err) {
+//       return next(err);
+//     }
+//     user.password = hash;
+//     next();
+//   })
+// });
 
 User.plugin(passportLocalMongoose);
 

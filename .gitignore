@@ -17,6 +17,7 @@ login*
 /public/*
 /server/bin/*.pem
 /server/bin/*.key
-
+config.js
 .tmp
 *.log
+server/config.js
