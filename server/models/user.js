@@ -14,7 +14,6 @@ var User = new Schema({
     },
     password: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -24,7 +23,6 @@ var User = new Schema({
     },
     verifytoken: String,
     verified: Boolean,
-    provider: String,
     facebook         : {
         id           : String,
         token        : String,
@@ -46,6 +44,20 @@ var User = new Schema({
         displayName  : String,
         photourls    : [String]
     },
+    linkedin         : {
+        id           : String,
+        token        : String,
+        email        : String,
+        displayName  : String,
+        photourls    : [String]
+    },
+    instagram        : {
+        id           : String,
+        token        : String,
+        email        : String,
+        displayName  : String,
+        photourls    : [String]
+    },
     firstname: {
       type: String,
       default: ''
@@ -58,7 +70,7 @@ var User = new Schema({
         type: Boolean,
         default: false
     },
-    isMemberOfSponsors: {
+    isMemberOfSponsor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Sponsor',
       required: false
@@ -71,20 +83,34 @@ var User = new Schema({
   }
 );
 
-User.methods.getName = function() {
-    return (this.firstname + ' ' + this.lastname);
-};
+User.methods.getVisibleAuthAttributes = function() {
+  return {
+    "username":this.username, 
+    "email": this.email,
+    "firstname": this.firstname,
+    "lastname": this.lastname,
+    "isMemberOfClub": this.isMemberOfClub,
+    "isMemberOfSponsor": this.isMemberOfSponsor,
+    "facebook":(this.facebook.token !== undefined),
+    "twitter":(this.twitter.token !== undefined),
+    "google":(this.google.token !== undefined),
+    "admin":this.admin,
+  }
+}
 
-// User.pre('save', function (next) {
-//   var user = this;
-//   bcrypt.hash(user.password, 10, function (err, hash){
-//     if (err) {
-//       return next(err);
-//     }
-//     user.password = hash;
-//     next();
-//   })
-// });
+User.methods.getAuthAttributes = function() {
+  return {
+    "username":this.username, 
+    "email": this.email,
+    "id":this._id,
+    "isMemberOfClub": this.isMemberOfClub,
+    "isMemberOfSponsor": this.isMemberOfSponsor,
+    "facebook":(this.facebook.token !== undefined),
+    "twitter":(this.twitter.token !== undefined),
+    "google":(this.google.token !== undefined),
+    "admin":this.admin,
+  }
+}
 
 User.plugin(passportLocalMongoose);
 

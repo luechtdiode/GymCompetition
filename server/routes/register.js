@@ -1,6 +1,6 @@
 var passportLocal = require('../auth/auth-local');
 var User = require('../models/user');
-var doLogin = require('./login');
+var login = require('./login').login;
 var Club = require('../models/clubs');
 var Sponsor = require('../models/sponsors');
 
@@ -47,7 +47,7 @@ function registerCompany(user, req, res, next) {
             return res.status(500).json({err: err});
           }
           console.log("Sponsor-User created");
-          passportLocal.authenticate('local', doLogin(req,res,next))(req,res,next);
+          passportLocal.authenticate('local', login(req,res,next))(req,res,next);
         });
       });
     }
@@ -90,14 +90,14 @@ function registerClub(user, req, res, next) {
         console.log("Club created");
         user.isMemberOfClub = club.id;
         user.save((err,user) => {
-          console.log("Club-User created");
           if(err) {
             console.log(err);
             User.findByIdAndRemove(user.id, (err, user) => {
               return res.status(500).json({err: err});
             });
           }
-          passportLocal.authenticate('local', doLogin(req,res,next))(req,res,next);
+          console.log("Club-User created");
+          passportLocal.authenticate('local', login(req,res,next))(req,res,next);
         });
       });
     }

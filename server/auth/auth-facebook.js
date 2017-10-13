@@ -41,17 +41,9 @@ const strategyFunction = function(req, accessToken, refreshToken, profile, done)
       if(err) {
         return done(err);
       } else {
-        var token = Verify.getToken({
-          "username":user.username, 
-          "email": user.email,
-          "id":user._id,
-          "facebook":(user.facebook.token !== undefined),
-          "twitter":(user.twitter.token !== undefined),
-          "google":(user.google.token !== undefined),
-          "admin":user.admin,
-        });
+        var token = Verify.getToken(user);
         req.session.jwtToken = token;
-        req.session.userid = user._id;
+        req.decoded = user.getAuthAttributes();
         user.token = token;
         return done(null, user);
       }

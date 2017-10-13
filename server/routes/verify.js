@@ -1,9 +1,9 @@
 var User = require('../models/user');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('../config.js');
+var Config = require('../config.js');
 
 exports.getToken = function (user) {
-    return jwt.sign(user, config.secretKey, {
+    return jwt.sign(user.getAuthAttributes(), Config.secretKey, {
         expiresIn: 3600
     });
 };
@@ -15,7 +15,7 @@ exports.verifyOrdinaryUser = function (req, res, next) {
     // decode token
     if (token) {
         // verifies secret and checks exp
-        jwt.verify(token, config.secretKey, function (err, decoded) {
+        jwt.verify(token, Config.secretKey, function (err, decoded) {
             if (err) {
                 var err = new Error('You are not authenticated!');
                 err.status = 401;
@@ -23,7 +23,6 @@ exports.verifyOrdinaryUser = function (req, res, next) {
             } else {
                 // if everything is good, save to request for use in other routes
                 req.decoded = decoded;
-                req.session.userid = decoded.id;
                 req.session.jwtToken = token;
                 next();
             }
@@ -37,8 +36,7 @@ exports.verifyOrdinaryUser = function (req, res, next) {
     }
 };
 
-// Task 1: provide a admin-verifier
-exports.verifyAdmin = function (req, res, next) {
+exports.verifyAdmin = (req, res, next) => {
     if (req.decoded.admin) {
       next();
     }
@@ -46,5 +44,16 @@ exports.verifyAdmin = function (req, res, next) {
       var err = new Error('You are not authorized to perform this operation!');
       err.status = 403;
       return next(err);
+    }
+};
+
+exports.materializeUser = (callback) => (req, res, next) => {
+    if (req.decoded && req.decoded.id) {
+        User.findById(req.decoded.id, callback);
+    }
+    else {
+        var err = new Error('You are not authorized to perform this operation!');
+        err.status = 403;
+        return next(err);
     }
 };

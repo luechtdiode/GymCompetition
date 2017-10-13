@@ -1,51 +1,73 @@
 var express = require('express');
 var authRouter = express.Router();
 var passport = require('passport');
-var passportLocal = require('../auth/auth-local');
-var passportFacebook = require('../auth/auth-facebook');
-var User = require('../models/user');
-var doLogin = require('./login');
+var login = require('./login').login;
+var loginResponse = require('./login').loginResponse;
 var registerClub = require('./register').registerClub;
 var registerCompany = require('./register').registerCompany;
+var User = require('../models/user');
 var Club = require('../models/clubs');
 var Sponsor = require('../models/sponsors');
-var competitiones = require('../models/competitions');
+var Competitions = require('../models/competitions');
 var Verify = require('./verify');
-var config = require('../config');
+var Config = require('../config');
+
+const authenticate = (strategy) => (req, res, next) => passport.authenticate(strategy, login(req,res,next))(req, res, next);
+const authorize = (strategy) => (req, res, next) => passport.authorize(strategy, login(req,res,next))(req, res, next);
+const materializeAndAuthenticate = (req, res, next) => Verify.materializeUser(login(req,res,next))(req, res, next);
 
 authRouter.post('/auth/register', (req, res, next) => {
   console.log("register: " + req.body.username);
-  User.register(new User({ username : req.body.username }),
+  var user = {
+    username : req.body.username,
+  };
+  if(req.body.firstname) {
+    user.firstname = req.body.firstname;
+  }
+  if(req.body.lastname) {
+    user.lastname = req.body.lastname;
+  }
+  if(req.body.email) {
+    user.email = req.body.email;
+  }
+  User.register(new User(user),
       req.body.password, (err, user) => {
       if (err) {
         return res.status(500).json({err: err});
-      }
-      if(req.body.firstname) {
-        user.firstname = req.body.firstname;
-      }
-      if(req.body.lastname) {
-        user.lastname = req.body.lastname;
-      }
-      if(req.body.email) {
-        user.email = req.body.email;
       }
       
       if(req.body.company) {
         return registerCompany(user, req, res, next);
       }
-      else {
+      else if(req.body.name) {
         return registerClub(user, req, res, next);
+      } else {
+        user.save((err,user) => {
+          if(err) {
+            console.log(err);
+            User.findByIdAndRemove(user.id, (err, user) => {
+              return res.status(500).json({err: err});
+            });
+          }
+          console.log("User without Club or Sponsor created");
+          passportLocal.authenticate('local', doLogin(req,res,next))(req,res,next);
+        });
       }
     });
-  });
+  },
+  loginResponse
+);
 
-authRouter.post('/auth/login', (req, res, next) => {
-  passportLocal.authenticate('local', doLogin(req,res,next))(req,res,next);
-});
+authRouter.post('/auth/login', 
+  authenticate('local'),
+  loginResponse
+);
 
-authRouter.route('/auth/login/callback').post(Verify.verifyOrdinaryUser, (req, res, next) => {
-  passportLocal.authenticate('local', doLogin(req,res,next))(req,res,next);
-});
+authRouter.route('/auth/login/renew').post(
+  Verify.verifyOrdinaryUser, 
+  materializeAndAuthenticate,
+  loginResponse
+);
 
 authRouter.get('/auth/logout', (req, res) => {
   req.logout();
@@ -54,36 +76,43 @@ authRouter.get('/auth/logout', (req, res) => {
   });
 });
 
-// Facebook authentication
-authRouter.get('/auth/facebook/', passportFacebook.authenticate('facebook', { scope : 'email' }));
-authRouter.get('/auth/facebook/callback', (req,res,next) => {
-  // passportFacebook.authenticate('facebook', doLogin(req,res,next))(req,res,next);
-  passportFacebook.authenticate('facebook', function(err, user, info) {
-    // successful auth, user is set at req.user.  redirect as necessary.
-    return res.redirect(config.frontEndUrl + '/#/auth/profile/' + req.session.jwtToken);
-  }) (req,res,next);
-});
-
-// Facebook connect
-authRouter.route('/connect/facebook').get(Verify.verifyOrdinaryUser, passportFacebook.authorize('facebook-connect', { scope : 'email' }));
-authRouter.route('/connect/facebook/callback').get(Verify.verifyOrdinaryUser, (req,res,next) => {
-  passportFacebook.authorize('facebook-connect', function(err, user, info) {
-    // successful auth, user is set at req.user.  redirect as necessary.
-    
-    return res.redirect(config.frontEndUrl + '/#/auth/profile');
-  }) (req,res,next);
-});
-
-// Facebook disconnect
-authRouter.route('/disconnect/facebook').put(Verify.verifyOrdinaryUser, function(req, res, next) {
-  User.findById(req.body.id, (err, user) => {
-    if(err) next(err);
-    var user            = req.user;
-    user.facebook.token = undefined;
-    user.save(function(err) {
-        res.json(user);
+// Social-Providers authentication
+authRouter.route('/auth/:id')
+  .get((req, res, next) => passport.authenticate(req.params.id, { scope : 'email' })(req, res, next));
+authRouter.route('/auth/:id/callback')
+  .get((req, res, next) => authenticate(req.params.id)(req, res, next),
+      (req, res, next) => {
+        // successful auth, user is set at req.user.  redirect as necessary.
+        return res.redirect(Config.frontEndUrl + '/#/auth/profile/' + req.session.jwtToken);
       });
-  });
-});
+
+// Social-Providers connect (link)
+authRouter.route('/connect/:id')
+  .get(Verify.verifyOrdinaryUser,
+      (req, res, next) => passport.authorize(req.params.id, { scope : 'email' })(req, res, next));
+authRouter.route('/connect/:id/callback')      
+  .get(Verify.verifyOrdinaryUser, 
+      (req, res, next) => authorize(req.params.id)(req, res, next),
+      (req, res, next) => {
+        // successful auth, user is set at req.user.  redirect as necessary.
+        return res.redirect(Config.frontEndUrl + '/#/auth/profile/' + req.session.jwtToken);
+      });
+
+// Social-Providers disconnect (unlink)
+authRouter.route('/disconnect/:id').put(
+  Verify.verifyOrdinaryUser, 
+  (req, res, next) => {
+    User.findById(req.body.id, (err, user) => {
+      if(err) next(err);
+      var user            = req.user;
+      user[req.params.id].token = undefined;
+      user.save(function(err, user) {
+        if(err) next(err);
+        next();
+      });
+    });
+  },
+  loginResponse
+);
 
 module.exports = authRouter;
