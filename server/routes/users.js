@@ -18,28 +18,28 @@ usersRouter.route('/')
   // Task 3: Only admins are allowed to request the list of users
   .get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
     User.find({}, (err, users) => {
-      if(err) next(err);
+      if(err) return next(err);
       res.json(users);
     });
   });
 usersRouter.route('/profile')
   .get(Verify.verifyOrdinaryUser, (req, res, next) => {
     User.findById(req.decoded.id, (err, user) => {
-      if(err) next(err);
+      if(err) return next(err);
       makeProfileResponse(req, res, user);
     });
   })
   .put(Verify.verifyOrdinaryUser, (req, res, next) => {
     User.findById(req.decoded.id, function (err, persistedUser) {
-      if (err) next(err);
+      if (err) return next(err);
+      var user = req.body;
       User.find({ $or: [ { username: user.username }, { email: user.email } ] }, (err, users) => {
-        if(err) next(err);
-        if(users.length > 0 && users[0].id !== persistedUser.id) {
+        if(err) return next(err);
+        if((users.length === 1 && users[0].id !== persistedUser.id) || users.length > 1) {
           err = new Error('Ambigous username or email to other existing users');
           err.status = 427;
-          next(err);
+          return next(err);
         }
-        var user = req.body;
         if(user.password && user.password2 && user.password === user.password2) {
           persistedUser.setPassword(user.password);
         }
@@ -48,7 +48,7 @@ usersRouter.route('/profile')
         persistedUser.firstname = user.firstname;
         persistedUser.lastname = user.lastname;
         persistedUser.save(function(err, updatedUser) {
-          if(err) next(err);
+          if(err) return next(err);
           renewJWT(req, updatedUser);
           makeProfileResponse(req, res, updatedUser);
         });
@@ -60,7 +60,7 @@ usersRouter.route('/:id')
   .get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
     console.log("find user with id " + req.params.id)
     User.findById(req.params.id, (err, user) => {
-      if(err) next(err);
+      if(err) return next(err);
       res.json(user);
     });
   })
@@ -69,7 +69,7 @@ usersRouter.route('/:id')
     User.findByIdAndRemove(req.params.id, (err, user) => {
       if(err) {
         console.log(err);
-        next(err);
+        return next(err);
       }
       res.json(user);
     });
@@ -79,7 +79,7 @@ usersRouter.cleanup = () => {
   User.find({}, (err, comps) => {
     if(err) {
       console.log(err);
-      next(err);
+      return next(err);
     }
     for(var i in comps) {
       if(!comps[i].isMemberOfClub && !comps[i].isMemberOfSponsor) {
@@ -114,7 +114,7 @@ usersRouter.cleanup = () => {
     competitiones.find({}, (err, comps) => {
       if(err) {
         console.log(err);
-        next(err);
+        return next(err);
       }
       for(var i in comps) {
         if(!comps[i].clubid) {

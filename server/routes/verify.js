@@ -24,7 +24,7 @@ exports.verifyOrdinaryUser = function (req, res, next) {
                 // if everything is good, save to request for use in other routes
                 req.decoded = decoded;
                 req.session.jwtToken = token;
-                next();
+                return next();
             }
         });
     } else {
@@ -38,7 +38,7 @@ exports.verifyOrdinaryUser = function (req, res, next) {
 
 exports.verifyAdmin = (req, res, next) => {
     if (req.decoded.admin) {
-      next();
+      return next();
     }
     else {
       var err = new Error('You are not authorized to perform this operation!');

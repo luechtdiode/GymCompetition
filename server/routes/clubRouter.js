@@ -16,7 +16,7 @@ clubRouter.route('/')
         //.populate('comments.postedBy')
         .exec(function (err, club) {
         if (err) {
-          next(err);
+          return next(err);
         }
         else {
           res.json(club);
@@ -27,7 +27,7 @@ clubRouter.route('/')
 .post(Verify.verifyOrdinaryUser, function (req, res, next) {
     clubes.create(req.body, function (err, club) {
       if (err) {
-        next(err);
+        return next(err);
       }
       else {
         console.log('club created!');
@@ -39,7 +39,7 @@ clubRouter.route('/')
 .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
     clubes.remove({}, function (err, resp) {
       if (err) {
-        next(err);
+        return next(err);
       }
       else {
         res.json(resp);
@@ -52,7 +52,7 @@ clubRouter.route('/month')
     clubes.findOne()
         .exec(function (err, competition) {
           if (err) {
-            next(err);
+            return next(err);
           }
           else {
             res.json(competition);
@@ -66,7 +66,7 @@ clubRouter.route('/:id')
       //.populate('comments.postedBy')
       .exec(function (err, club) {
         if (err) {
-          next(err);
+          return next(err);
         }
         else {
           res.json(club);
@@ -81,7 +81,7 @@ clubRouter.route('/:id')
         new: true
     }, function (err, club) {
       if (err) {
-        next(err);
+        return next(err);
       }
       else {
         res.json(club);
@@ -94,7 +94,7 @@ clubRouter.route('/:id')
     clubes.findByIdAndRemove(req.params.id, function (err, resp) {
       if (err) {
         console.log("error deleting club " + err);
-        next(err);
+        return next(err);
       }
       else {
         cleanup();

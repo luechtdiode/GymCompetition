@@ -110,7 +110,7 @@ authRouter.route('/disconnect/:id').put(
       user.save(function(err, user) {
         if(err) next(err);
         req.user = user;
-        next();
+        return next();
       });
     });
   },

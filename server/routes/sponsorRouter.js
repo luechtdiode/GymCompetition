@@ -14,7 +14,7 @@ sponsorRouter.route('/')
         .populate('action')
         .exec(function (err, sponsor) {
           if (err) {
-            next(err);
+            return next(err);
           }
           else {
             res.json(sponsor);
@@ -38,7 +38,7 @@ sponsorRouter.route('/')
 .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
     sponsores.remove({}, function (err, resp) {
       if (err) {
-        next(err);
+        return next(err);
       }
       else {
         res.json(resp);
@@ -51,7 +51,7 @@ sponsorRouter.route('/month')
     sponsores.findOne()
         .exec(function (err, sponsor) {
           if (err) {
-            next(err);
+            return next(err);
           }
           else {
             res.json(sponsor);
@@ -65,7 +65,7 @@ sponsorRouter.route('/:id')
         //.populate('action')
         .exec(function (err, sponsor) {
           if (err) {
-            next(err);
+            return next(err);
           }
           else {
             res.json(sponsor);
@@ -80,7 +80,7 @@ sponsorRouter.route('/:id')
         new: true
     }, function (err, sponsor) {
       if (err) {
-        next(err);
+        return next(err);
       }
       else {
         res.json(sponsor);
@@ -93,7 +93,7 @@ sponsorRouter.route('/:id')
     sponsores.findByIdAndRemove(req.params.id, function (err, resp) {
       if (err) {
         console.log("error deleting sponsor " + err);
-        next(err);
+        return next(err);
       }
       else {
         cleanup();

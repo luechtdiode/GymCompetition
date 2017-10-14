@@ -12,7 +12,7 @@ actionRouter.route('/')
     actions.find(req.query)
         //.populate('comments.postedBy')
         .exec(function (err, action) {
-        if (err) next(err);
+        if (err) return next(err);
         res.json(action);
     });
 })
@@ -32,7 +32,7 @@ actionRouter.route('/')
 
 .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
     actions.remove({}, function (err, resp) {
-        if (err) next(err);
+        if (err) return next(err);
         res.json(resp);
     });
 });
@@ -42,7 +42,7 @@ actionRouter.route('/:actionId')
     actions.findById(req.params.actionId)
         //.populate('comments.postedBy')
         .exec(function (err, action) {
-        if (err) next(err);
+        if (err) return next(err);
         res.json(action);
     });
 })
@@ -53,14 +53,14 @@ actionRouter.route('/:actionId')
     }, {
         new: true
     }, function (err, action) {
-        if (err) next(err);
+        if (err) return next(err);
         res.json(action);
     });
 })
 
 .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
         actions.findByIdAndRemove(req.params.actionId, function (err, resp) {
-        if (err) next(err);
+        if (err) return next(err);
         res.json(resp);
     });
 });

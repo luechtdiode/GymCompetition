@@ -20,7 +20,7 @@ const doLogin = function(user, info, req, res, next) {
       });
     }
     renewJWT(req, user);
-    next();
+    return next();
   });
 };
 

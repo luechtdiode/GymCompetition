@@ -14,7 +14,7 @@ competitionRouter.route('/')
         .populate('action')
         .exec(function (err, competition) {
           if (err) {
-            next(err);
+            return next(err);
           }
           else {
             res.json(competition);
@@ -25,7 +25,7 @@ competitionRouter.route('/')
 .post(Verify.verifyOrdinaryUser, function (req, res, next) {
     competitiones.create(req.body, function (err, competition) {
         if (err) {
-          next(err);
+          return next(err);
         }
         else {
           console.log('competition created!');
@@ -37,7 +37,7 @@ competitionRouter.route('/')
 .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
     competitiones.remove({}, function (err, resp) {
       if (err) {
-        next(err);
+        return next(err);
       }
       else {
         res.json(resp);
@@ -58,7 +58,7 @@ competitionRouter.route('/next')
                 .populate('action')
                 .exec(function (err, competition) {
                   if (err) {
-                    next(err);
+                    return next(err);
                   }
                   else {
                     res.json(competition);
@@ -78,7 +78,7 @@ competitionRouter.route('/:id')
       .populate('action')
       .exec(function (err, competition) {
         if (err) {
-          next(err);
+          return next(err);
         }
         else {
           res.json(competition);
@@ -94,7 +94,7 @@ competitionRouter.route('/:id')
         new: true
     }, function (err, competition) {
       if (err) {
-        next(err);
+        return next(err);
       }
       else {
         res.json(competition);
@@ -106,7 +106,7 @@ competitionRouter.route('/:id')
     console.log("deleting competition " + req.params.id);
         competitiones.findByIdAndRemove(req.params.id, function (err, resp) {
           if (err) {
-            next(err);
+            return next(err);
           }
           else {
             res.json(resp);
