@@ -8,7 +8,7 @@ var User = require('../models/user');
 const checkuserAndReturn = (done) => (err, user) => {
   if(err) {
     done(err);
-  } else if (user === undefined || user.isNew) {
+  } else if (!user || user.isNew) {
     err = new Error('unknown user');
     err.status = 401;
     done(err);
