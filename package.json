@@ -28,21 +28,25 @@
     "jshint-stylish": "2.2.1"
   },
   "dependencies": {
-    "bluebird": "^3.5.0",
+    "bluebird": "3.5.0",
     "body-parser": "1.17.1",
     "cookie-parser": "1.4.3",
     "cors": "2.8.4",
     "express": "4.15.2",
-    "express-session": "^1.15.6",
+    "express-session": "1.15.6",
     "jsonwebtoken": "7.4.0",
     "mongodb": "https://registry.npmjs.org/mongodb/-/mongodb-2.2.26.tgz",
     "mongoose": "4.9.8",
     "mongoose-currency": "0.2.0",
     "morgan": "1.8.1",
     "passport": "0.3.2",
-    "passport-facebook": "~2.1.0",
+    "passport-facebook": "2.1.1",
+    "passport-google-oauth20": "1.0.0",
+    "passport-instagram": "1.0.0",
+    "passport-linkedin-oauth2": "1.5.0",
     "passport-local": "1.0.0",
     "passport-local-mongoose": "4.0.0",
+    "passport-twitter": "1.0.4",
     "serve-favicon": "2.4.2"
   },
   "unusedDeps": {

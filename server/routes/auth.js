@@ -78,7 +78,7 @@ authRouter.get('/auth/logout', (req, res) => {
 
 // Social-Providers authentication
 authRouter.route('/auth/:id')
-  .get((req, res, next) => passport.authenticate(req.params.id, { scope : 'email' })(req, res, next));
+  .get((req, res, next) => passport.authenticate(req.params.id)(req, res, next));
 authRouter.route('/auth/:id/callback')
   .get((req, res, next) => authenticate(req.params.id)(req, res, next),
       (req, res, next) => {
@@ -89,10 +89,10 @@ authRouter.route('/auth/:id/callback')
 // Social-Providers connect (link)
 authRouter.route('/connect/:id')
   .get(Verify.verifyOrdinaryUser,
-      (req, res, next) => passport.authorize(req.params.id, { scope : 'email' })(req, res, next));
+      (req, res, next) => passport.authorize(req.params.id + '-connect')(req, res, next));
 authRouter.route('/connect/:id/callback')      
   .get(Verify.verifyOrdinaryUser, 
-      (req, res, next) => authorize(req.params.id)(req, res, next),
+      (req, res, next) => authorize(req.params.id + '-connect')(req, res, next),
       (req, res, next) => {
         // successful auth, user is set at req.user.  redirect as necessary.
         return res.redirect(Config.frontEndUrl + '/#/auth/profile/' + req.session.jwtToken);

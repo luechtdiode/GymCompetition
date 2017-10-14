@@ -4184,6 +4184,21 @@
       "from": "passport-facebook@>=2.1.0 <2.2.0",
       "resolved": "https://registry.npmjs.org/passport-facebook/-/passport-facebook-2.1.1.tgz"
     },
+    "passport-google-oauth20": {
+      "version": "1.0.0",
+      "from": "passport-google-oauth20@latest",
+      "resolved": "https://registry.npmjs.org/passport-google-oauth20/-/passport-google-oauth20-1.0.0.tgz"
+    },
+    "passport-instagram": {
+      "version": "1.0.0",
+      "from": "passport-instagram@latest",
+      "resolved": "https://registry.npmjs.org/passport-instagram/-/passport-instagram-1.0.0.tgz"
+    },
+    "passport-linkedin-oauth2": {
+      "version": "1.5.0",
+      "from": "passport-linkedin-oauth2@latest",
+      "resolved": "https://registry.npmjs.org/passport-linkedin-oauth2/-/passport-linkedin-oauth2-1.5.0.tgz"
+    },
     "passport-local": {
       "version": "1.0.0",
       "from": "passport-local@1.0.0",
@@ -4201,6 +4216,11 @@
         }
       }
     },
+    "passport-oauth1": {
+      "version": "1.1.0",
+      "from": "passport-oauth1@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/passport-oauth1/-/passport-oauth1-1.1.0.tgz"
+    },
     "passport-oauth2": {
       "version": "1.4.0",
       "from": "passport-oauth2@>=1.0.0 <2.0.0",
@@ -4210,6 +4230,11 @@
       "version": "1.0.0",
       "from": "passport-strategy@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/passport-strategy/-/passport-strategy-1.0.0.tgz"
+    },
+    "passport-twitter": {
+      "version": "1.0.4",
+      "from": "passport-twitter@latest",
+      "resolved": "https://registry.npmjs.org/passport-twitter/-/passport-twitter-1.0.4.tgz"
     },
     "path-dirname": {
       "version": "1.0.2",
@@ -5476,8 +5501,7 @@
     "underscore": {
       "version": "1.7.0",
       "from": "underscore@>=1.7.0 <1.8.0",
-      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz",
-      "dev": true
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz"
     },
     "unique-stream": {
       "version": "1.0.0",
@@ -5779,6 +5803,11 @@
       "resolved": "https://registry.npmjs.org/wtf-8/-/wtf-8-1.0.0.tgz",
       "dev": true
     },
+    "xmldom": {
+      "version": "0.1.27",
+      "from": "xmldom@>=0.1.0 <0.2.0",
+      "resolved": "https://registry.npmjs.org/xmldom/-/xmldom-0.1.27.tgz"
+    },
     "xmlhttprequest-ssl": {
       "version": "1.5.3",
       "from": "xmlhttprequest-ssl@1.5.3",
@@ -5789,6 +5818,11 @@
       "version": "4.0.1",
       "from": "xtend@>=4.0.1 <4.1.0",
       "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz"
+    },
+    "xtraverse": {
+      "version": "0.1.0",
+      "from": "xtraverse@>=0.1.0 <0.2.0",
+      "resolved": "https://registry.npmjs.org/xtraverse/-/xtraverse-0.1.0.tgz"
     },
     "y18n": {
       "version": "3.2.1",
