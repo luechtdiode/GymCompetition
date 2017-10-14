@@ -49,10 +49,7 @@ exports.verifyAdmin = (req, res, next) => {
 
 exports.materializeUser = (callback) => (req, res, next) => {
     if (req.decoded && req.decoded.id) {
-        User.findById(req.decoded.id, (err, user, info) => {
-            callback(err, user, info);
-            next();
-        });
+        User.findById(req.decoded.id,callback);
     }
     else {
         var err = new Error('You are not authorized to perform this operation!');
