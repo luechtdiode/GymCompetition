@@ -63,11 +63,13 @@ authRouter.post('/auth/login',
   loginResponse
 );
 
-authRouter.route('/auth/login/renew').post(
+authRouter.route('/auth/renew').post(
   Verify.verifyOrdinaryUser, 
   materializeAndAuthenticate,
   loginResponse
 );
+
+// todo password reset like http://sahatyalkabov.com/how-to-implement-password-reset-in-nodejs/
 
 authRouter.get('/auth/logout', (req, res) => {
   req.logout();
@@ -102,12 +104,12 @@ authRouter.route('/connect/:id/callback')
 authRouter.route('/disconnect/:id').put(
   Verify.verifyOrdinaryUser, 
   (req, res, next) => {
-    User.findById(req.body.id, (err, user) => {
+    User.findById(req.decoded.id, (err, user) => {
       if(err) next(err);
-      var user            = req.user;
       user[req.params.id].token = undefined;
       user.save(function(err, user) {
         if(err) next(err);
+        req.user = user;
         next();
       });
     });

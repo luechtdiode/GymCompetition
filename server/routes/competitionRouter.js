@@ -23,7 +23,6 @@ competitionRouter.route('/')
 })
 
 .post(Verify.verifyOrdinaryUser, function (req, res, next) {
-  console.log(req.body);
     competitiones.create(req.body, function (err, competition) {
         if (err) {
           next(err);

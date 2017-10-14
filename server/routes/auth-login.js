@@ -1,6 +1,13 @@
 var Verify = require('./verify');
 
-const doLogin = (user, info, req, res, next) => {
+const renewJWT = function(req, user) {
+  var token = Verify.getToken(user);
+  req.decoded = user.getAuthAttributes();
+  req.user = user;
+  req.session.jwtToken = token;
+};
+
+const doLogin = function(user, info, req, res, next) {
   if (!user) {
     return res.status(401).json({
       err: info
@@ -12,16 +19,12 @@ const doLogin = (user, info, req, res, next) => {
         err: 'Could not log in user'
       });
     }
-    var token = Verify.getToken(user);
-    req.decoded = user.getAuthAttributes();
-    req.user = user;
-    req.session.jwtToken = token;
-
+    renewJWT(req, user);
     next();
   });
 };
 
-exports.login = (req, res, next) => {
+const login = function(req, res, next) {
   return (err, user, info) => {
     if (err) {
       return next(err);
@@ -30,7 +33,7 @@ exports.login = (req, res, next) => {
   };
 };
 
-exports.loginResponse = (req, res, next) => {
+const loginResponse = function(req, res, next) {
   if (!req.user || !req.session.jwtToken) {
     res.status(401).json({err: 'unknown user'});
   } else {
@@ -44,3 +47,5 @@ exports.loginResponse = (req, res, next) => {
     ));
   }
 };
+
+module.exports = {login, renewJWT, loginResponse};

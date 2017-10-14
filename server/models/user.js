@@ -23,6 +23,8 @@ var User = new Schema({
     },
     verifytoken: String,
     verified: Boolean,
+    // resetPasswordToken: String,
+    // resetPasswordExpires: Date,
     facebook         : {
         id           : String,
         token        : String,
@@ -83,6 +85,16 @@ var User = new Schema({
   }
 );
 
+User.methods.getSocialAccounts = function() {
+  return {
+    "facebook":this.facebook,
+    "twitter":this.twitter,
+    "google":this.google,
+    "linkedin":this.linkedin,
+    "instagram":this.instagram
+  }
+};
+
 User.methods.getVisibleAuthAttributes = function() {
   return {
     "username":this.username, 
@@ -94,6 +106,8 @@ User.methods.getVisibleAuthAttributes = function() {
     "facebook":(this.facebook.token !== undefined),
     "twitter":(this.twitter.token !== undefined),
     "google":(this.google.token !== undefined),
+    "linkedin":(this.linkedin.token !== undefined),
+    "instagram":(this.instagram.token !== undefined),
     "admin":this.admin,
   }
 }
@@ -108,6 +122,8 @@ User.methods.getAuthAttributes = function() {
     "facebook":(this.facebook.token !== undefined),
     "twitter":(this.twitter.token !== undefined),
     "google":(this.google.token !== undefined),
+    "linkedin":(this.linkedin.token !== undefined),
+    "instagram":(this.instagram.token !== undefined),
     "admin":this.admin,
   }
 }

@@ -2,9 +2,16 @@ var express = require('express');
 var usersRouter = express.Router();
 var User = require('../models/user');
 var Verify = require('./verify');
+var renewJWT = require('./auth-login').renewJWT;
 var Club = require('../models/clubs');
 var Sponsor = require('../models/sponsors');
 var competitiones = require('../models/competitions');
+
+const makeProfileResponse = (req, res, user) => res.json({
+  token: req.session.jwtToken, 
+  user: user.getVisibleAuthAttributes(), 
+  socialAccounts: user.getSocialAccounts()
+});
 
 /* GET users listing. */
 usersRouter.route('/')
@@ -19,16 +26,36 @@ usersRouter.route('/profile')
   .get(Verify.verifyOrdinaryUser, (req, res, next) => {
     User.findById(req.decoded.id, (err, user) => {
       if(err) next(err);
-      Sponsor.findById(user.isMemberOfSponsor, (err, sponsor) => {
+      makeProfileResponse(req, res, user);
+    });
+  })
+  .put(Verify.verifyOrdinaryUser, (req, res, next) => {
+    User.findById(req.decoded.id, function (err, persistedUser) {
+      if (err) next(err);
+      User.find({ $or: [ { username: user.username }, { email: user.email } ] }, (err, users) => {
         if(err) next(err);
-        Club.findById(user.isMemberOfClub, (err, club) => {
+        if(users.length > 0 && users[0].id !== persistedUser.id) {
+          err = new Error('Ambigous username or email to other existing users');
+          err.status = 427;
+          next(err);
+        }
+        var user = req.body;
+        if(user.password && user.password2 && user.password === user.password2) {
+          persistedUser.setPassword(user.password);
+        }
+        persistedUser.username = user.username;
+        persistedUser.email = user.email;
+        persistedUser.firstname = user.firstname;
+        persistedUser.lastname = user.lastname;
+        persistedUser.save(function(err, updatedUser) {
           if(err) next(err);
-          // user.token = req.session.jwtToken;
-          res.json({token: req.session.jwtToken, user: user, club: club, sponsor: sponsor});        
+          renewJWT(req, updatedUser);
+          makeProfileResponse(req, res, updatedUser);
         });
       });
-    });
+    })
   });
+
 usersRouter.route('/:id')
   .get(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
     console.log("find user with id " + req.params.id)

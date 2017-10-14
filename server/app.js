@@ -103,9 +103,19 @@ app.all('*', function(req, res, next){
   }
 });
 
+var sess = {
+  name: 'gymapp.sid',
+  secret: config.secretKey,
+  resave: true,
+  saveUninitialized: true,
+  proxy: true
+};
+if (app.get('env') === 'production') {
+  sess.cookie = { secure: true }  ;
+}
 // passport config
 var User = require('./models/user');
-app.use(session({ secret: config.secretKey })); // express-session
+app.use(session(sess)); // express-session
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors({  

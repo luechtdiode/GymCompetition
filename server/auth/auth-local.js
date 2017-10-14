@@ -1,7 +1,8 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
-var init = require('./auth-base');
+var init = require('./auth-base').init;
+
 
 passport.use(new LocalStrategy(User.authenticate()));
 
