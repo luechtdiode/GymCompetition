@@ -1,6 +1,6 @@
 var passportLocal = require('../auth/auth-local');
 var User = require('../models/user');
-var login = require('./login').login;
+var login = require('./auth-login').login;
 var Club = require('../models/clubs');
 var Sponsor = require('../models/sponsors');
 

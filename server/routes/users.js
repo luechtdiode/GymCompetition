@@ -2,7 +2,6 @@ var express = require('express');
 var usersRouter = express.Router();
 var User = require('../models/user');
 var Verify = require('./verify');
-var doLogin = require('./login');
 var Club = require('../models/clubs');
 var Sponsor = require('../models/sponsors');
 var competitiones = require('../models/competitions');
