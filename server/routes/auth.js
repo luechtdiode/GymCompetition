@@ -106,6 +106,7 @@ authRouter.route('/disconnect/:id').put(
   (req, res, next) => {
     User.findById(req.decoded.id, (err, user) => {
       if(err) next(err);
+      user[req.params.id].id = undefined;
       user[req.params.id].token = undefined;
       user.save(function(err, user) {
         if(err) next(err);
