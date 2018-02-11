@@ -36,6 +36,7 @@ if (mongo) {
 } else {
   conn_str = config.mongoUrl;
 }
+
 var mongooseConfig = {
     server:{
       auto_reconnect:true,
@@ -137,7 +138,7 @@ app.use('/api/', express.static(path.join(__dirname, '../public')));
 
 const routes = require('./routes/index').init(app);
 app.use('/', routes);
-app.use('/api/', routes);
+// app.use('/api/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

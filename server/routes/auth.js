@@ -79,22 +79,22 @@ authRouter.get('/auth/logout', (req, res) => {
 });
 
 // Social-Providers authentication
-authRouter.route('/auth/:id')
-  .get((req, res, next) => passport.authenticate(req.params.id)(req, res, next));
-authRouter.route('/auth/:id/callback')
-  .get((req, res, next) => authenticate(req.params.id)(req, res, next),
+authRouter.route('/auth/:strategy')
+  .get((req, res, next) => passport.authenticate(req.params.strategy)(req, res, next));
+authRouter.route('/auth/:strategy/callback')
+  .get((req, res, next) => authenticate(req.params.strategy)(req, res, next),
       (req, res, next) => {
         // successful auth, user is set at req.user.  redirect as necessary.
         return res.redirect(Config.frontEndUrl + '/#/auth/profile/' + req.session.jwtToken);
       });
 
 // Social-Providers connect (link)
-authRouter.route('/connect/:id')
+authRouter.route('/connect/:strategy')
   .get(Verify.verifyOrdinaryUser,
-      (req, res, next) => passport.authorize(req.params.id + '-connect')(req, res, next));
-authRouter.route('/connect/:id/callback')      
+      (req, res, next) => passport.authorize(req.params.strategy + '-connect')(req, res, next));
+authRouter.route('/connect/:strategy/callback')      
   .get(Verify.verifyOrdinaryUser, 
-      (req, res, next) => authorize(req.params.id + '-connect')(req, res, next),
+      (req, res, next) => authorize(req.params.strategy + '-connect')(req, res, next),
       (req, res, next) => {
         // successful auth, user is set at req.user.  redirect as necessary.
         return res.redirect(Config.frontEndUrl + '/#/auth/profile/' + req.session.jwtToken);
